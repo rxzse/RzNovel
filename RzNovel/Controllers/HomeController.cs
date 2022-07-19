@@ -23,6 +23,13 @@ namespace RzNovel.Controllers
             return View();
         }
 
+        public string Register([FromQuery] int id, UserRegister _user)
+        {
+
+
+            return _user.ToString() + " / " + id.ToString();
+        }
+
         public IActionResult Privacy()
         {
             return View();
