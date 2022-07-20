@@ -10,7 +10,7 @@ using RzNovel.Services;
 using RzNovel.Models;
 using System.Text;
 
-namespace RzNovel.Services.Impl
+namespace RzNovel.Services
 {
 
     public class UserService : IUserService
@@ -25,17 +25,17 @@ namespace RzNovel.Services.Impl
         public async Task<ActionResult<UserRegisterRespDto>> Register(UserRegisterReqDto dto)
         {
             UserInfo userInfo = new UserInfo();
-            userInfo.Username = userInfo.NickName = dto.Username;
+            userInfo.Username = userInfo.NickName = dto.username;
             userInfo.CreateTime = userInfo.UpdateTime = DateTime.Now;
             userInfo.Salt = "0";
-            userInfo.Password = string.Join("", MD5.Create().ComputeHash(Encoding.ASCII.GetBytes(dto.Password)).Select(s => s.ToString("x2")));
+            userInfo.Password = string.Join("", MD5.Create().ComputeHash(Encoding.ASCII.GetBytes(dto.password)).Select(s => s.ToString("x2")));
             _context.UserInfos.Add(userInfo);
             await _context.SaveChangesAsync();
 
             // build resp
             UserRegisterRespDto resp = new UserRegisterRespDto();
-            resp.Id = userInfo.Id;
-            resp.Token = "Hehe";
+            resp.id = userInfo.Id;
+            resp.token = "Hehe";
             return resp;
 
         }

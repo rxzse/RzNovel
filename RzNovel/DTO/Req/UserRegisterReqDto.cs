@@ -11,10 +11,10 @@ namespace RzNovel.DTO.Req
     {
         [Required(AllowEmptyStrings = false, ErrorMessage = "Username must be cant empty"), MaxLength(15)]
         [Display(Name = "Username")]
-        public string Username { get; set; }
+        public string username { get; set; }
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "Password must be cant empty"), MaxLength(20)]
         [Display(Name = "Password")]
-        public string Password { get; set; }
+        public string password { get; set; }
     }
 }

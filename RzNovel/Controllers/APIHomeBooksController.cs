@@ -11,47 +11,47 @@ namespace RzNovel.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserInfoesController : ControllerBase
+    public class APIHomeBooksController : ControllerBase
     {
         private readonly RzNovelContext _context;
 
-        public UserInfoesController(RzNovelContext context)
+        public APIHomeBooksController(RzNovelContext context)
         {
             _context = context;
         }
 
-        // GET: api/UserInfoes
+        // GET: api/APIHomeBooks
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserInfo>>> GetUserInfos()
+        public async Task<ActionResult<IEnumerable<HomeBook>>> GetHomeBooks()
         {
-            return await _context.UserInfos.ToListAsync();
+            return await _context.HomeBooks.ToListAsync();
         }
 
-        // GET: api/UserInfoes/5
+        // GET: api/APIHomeBooks/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserInfo>> GetUserInfo(long id)
+        public async Task<ActionResult<HomeBook>> GetHomeBook(long id)
         {
-            var userInfo = await _context.UserInfos.FindAsync(id);
+            var homeBook = await _context.HomeBooks.FindAsync(id);
 
-            if (userInfo == null)
+            if (homeBook == null)
             {
                 return NotFound();
             }
 
-            return userInfo;
+            return homeBook;
         }
 
-        // PUT: api/UserInfoes/5
+        // PUT: api/APIHomeBooks/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUserInfo(long id, UserInfo userInfo)
+        public async Task<IActionResult> PutHomeBook(long id, HomeBook homeBook)
         {
-            if (id != userInfo.Id)
+            if (id != homeBook.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(userInfo).State = EntityState.Modified;
+            _context.Entry(homeBook).State = EntityState.Modified;
 
             try
             {
@@ -59,7 +59,7 @@ namespace RzNovel.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserInfoExists(id))
+                if (!HomeBookExists(id))
                 {
                     return NotFound();
                 }
@@ -72,36 +72,36 @@ namespace RzNovel.Controllers
             return NoContent();
         }
 
-        // POST: api/UserInfoes
+        // POST: api/APIHomeBooks
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<UserInfo>> PostUserInfo(UserInfo userInfo)
+        public async Task<ActionResult<HomeBook>> PostHomeBook(HomeBook homeBook)
         {
-            _context.UserInfos.Add(userInfo);
+            _context.HomeBooks.Add(homeBook);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUserInfo", new { id = userInfo.Id }, userInfo);
+            return CreatedAtAction("GetHomeBook", new { id = homeBook.Id }, homeBook);
         }
 
-        // DELETE: api/UserInfoes/5
+        // DELETE: api/APIHomeBooks/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUserInfo(long id)
+        public async Task<IActionResult> DeleteHomeBook(long id)
         {
-            var userInfo = await _context.UserInfos.FindAsync(id);
-            if (userInfo == null)
+            var homeBook = await _context.HomeBooks.FindAsync(id);
+            if (homeBook == null)
             {
                 return NotFound();
             }
 
-            _context.UserInfos.Remove(userInfo);
+            _context.HomeBooks.Remove(homeBook);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool UserInfoExists(long id)
+        private bool HomeBookExists(long id)
         {
-            return _context.UserInfos.Any(e => e.Id == id);
+            return _context.HomeBooks.Any(e => e.Id == id);
         }
     }
 }

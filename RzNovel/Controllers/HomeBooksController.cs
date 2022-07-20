@@ -9,22 +9,22 @@ using RzNovel.Models;
 
 namespace RzNovel.Controllers
 {
-    public class BookCategoriesController : Controller
+    public class HomeBooksController : Controller
     {
         private readonly RzNovelContext _context;
 
-        public BookCategoriesController(RzNovelContext context)
+        public HomeBooksController(RzNovelContext context)
         {
             _context = context;
         }
 
-        // GET: BookCategories
+        // GET: HomeBooks
         public async Task<IActionResult> Index()
         {
-            return View(await _context.BookCategories.ToListAsync());
+            return View(await _context.HomeBooks.ToListAsync());
         }
 
-        // GET: BookCategories/Details/5
+        // GET: HomeBooks/Details/5
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null)
@@ -32,39 +32,39 @@ namespace RzNovel.Controllers
                 return NotFound();
             }
 
-            var bookCategory = await _context.BookCategories
+            var homeBook = await _context.HomeBooks
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (bookCategory == null)
+            if (homeBook == null)
             {
                 return NotFound();
             }
 
-            return View(bookCategory);
+            return View(homeBook);
         }
 
-        // GET: BookCategories/Create
+        // GET: HomeBooks/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: BookCategories/Create
+        // POST: HomeBooks/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,WorkDirection,Name,Sort,CreateTime,UpdateTime")] BookCategory bookCategory)
+        public async Task<IActionResult> Create([Bind("Id,Type,Sort,BookId,CreateTime,UpdateTime")] HomeBook homeBook)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(bookCategory);
+                _context.Add(homeBook);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(bookCategory);
+            return View(homeBook);
         }
 
-        // GET: BookCategories/Edit/5
+        // GET: HomeBooks/Edit/5
         public async Task<IActionResult> Edit(long? id)
         {
             if (id == null)
@@ -72,22 +72,22 @@ namespace RzNovel.Controllers
                 return NotFound();
             }
 
-            var bookCategory = await _context.BookCategories.FindAsync(id);
-            if (bookCategory == null)
+            var homeBook = await _context.HomeBooks.FindAsync(id);
+            if (homeBook == null)
             {
                 return NotFound();
             }
-            return View(bookCategory);
+            return View(homeBook);
         }
 
-        // POST: BookCategories/Edit/5
+        // POST: HomeBooks/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,WorkDirection,Name,Sort,CreateTime,UpdateTime")] BookCategory bookCategory)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,Type,Sort,BookId,CreateTime,UpdateTime")] HomeBook homeBook)
         {
-            if (id != bookCategory.Id)
+            if (id != homeBook.Id)
             {
                 return NotFound();
             }
@@ -96,12 +96,12 @@ namespace RzNovel.Controllers
             {
                 try
                 {
-                    _context.Update(bookCategory);
+                    _context.Update(homeBook);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BookCategoryExists(bookCategory.Id))
+                    if (!HomeBookExists(homeBook.Id))
                     {
                         return NotFound();
                     }
@@ -112,10 +112,10 @@ namespace RzNovel.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(bookCategory);
+            return View(homeBook);
         }
 
-        // GET: BookCategories/Delete/5
+        // GET: HomeBooks/Delete/5
         public async Task<IActionResult> Delete(long? id)
         {
             if (id == null)
@@ -123,30 +123,30 @@ namespace RzNovel.Controllers
                 return NotFound();
             }
 
-            var bookCategory = await _context.BookCategories
+            var homeBook = await _context.HomeBooks
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (bookCategory == null)
+            if (homeBook == null)
             {
                 return NotFound();
             }
 
-            return View(bookCategory);
+            return View(homeBook);
         }
 
-        // POST: BookCategories/Delete/5
+        // POST: HomeBooks/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
-            var bookCategory = await _context.BookCategories.FindAsync(id);
-            _context.BookCategories.Remove(bookCategory);
+            var homeBook = await _context.HomeBooks.FindAsync(id);
+            _context.HomeBooks.Remove(homeBook);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool BookCategoryExists(long id)
+        private bool HomeBookExists(long id)
         {
-            return _context.BookCategories.Any(e => e.Id == id);
+            return _context.HomeBooks.Any(e => e.Id == id);
         }
     }
 }

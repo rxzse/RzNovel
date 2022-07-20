@@ -10,9 +10,9 @@ namespace RzNovel.DTO.Resp
     public class UserRegisterRespDto
     {
         [Display(Name="UserId")]
-        public long Id { get; set; }
+        public long id { get; set; }
 
         [Display(Name = "Token")]
-        public string Token { get; set; }
+        public string token { get; set; }
     }
 }

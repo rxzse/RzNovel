@@ -26,7 +26,8 @@ namespace RzNovel
         {
             services.AddControllersWithViews();
             services.AddScoped<RzNovelContext, RzNovelContext>();
-            services.AddScoped<IUserService, RzNovel.Services.Impl.UserService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IHomeService, HomeService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
