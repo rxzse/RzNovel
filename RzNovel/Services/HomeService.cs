@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using RzNovel.Models;
 using RzNovel.DTO.Resp;
+using RzNovel.Common.Resp;
 
 namespace RzNovel.Services
 {
@@ -17,7 +18,7 @@ namespace RzNovel.Services
             _context = context;
         }
 
-        public async Task<List<HomeBookRespDto>> ListHomeBooks() 
+        public async Task<RestResp<List<HomeBookRespDto>>> ListHomeBooks() 
         {
             List<HomeBookRespDto> results = new List<HomeBookRespDto>();
 
@@ -49,7 +50,7 @@ namespace RzNovel.Services
                 });
                 
             }
-            return results;
+            return RestResp<List<HomeBookRespDto>>.ok(results);
         }
     }
 }
