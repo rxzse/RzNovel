@@ -2,4 +2,4 @@
 
 ## PRN Project
 
-~Created by Thái Việt~
+_Created by Thái Việt_
