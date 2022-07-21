@@ -17,11 +17,13 @@ namespace RzNovel.Controllers
     {
         private readonly IHomeService _homeService;
         private readonly IBookService _bookService;
+        private readonly IUserService _userService;
 
-        public TestController(IHomeService homeService, IBookService bookService)
+        public TestController(IHomeService homeService, IBookService bookService, IUserService userService)
         {
             _homeService = homeService;
             _bookService = bookService;
+            _userService = userService;
         }
 
         // GET: api/APIHomeBooks
@@ -40,6 +42,20 @@ namespace RzNovel.Controllers
             
 
             return await _bookService.saveBook(dto);
+        }
+
+        [Route("~/api/test/login")]
+        [HttpPost]
+        public async Task<ActionResult<RestResp<UserLoginRespDto>>> PostLogin(UserLoginReqDto dto)
+        {
+            return await _userService.Login(dto);
+        }
+
+        [Route("~/api/test/register")]
+        [HttpPost]
+        public async Task<ActionResult<RestResp<UserRegisterRespDto>>> PostRegister(UserRegisterReqDto dto)
+        {
+            return await _userService.Register(dto);
         }
     }
 }

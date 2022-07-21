@@ -42,9 +42,9 @@ namespace RzNovel.Common.Resp
             return new RestResp<T>(_data);
         }
 
-        public static RestResp<T> error(T _data)
+        public static RestResp<T> error(string message)
         {
-            return new RestResp<T>("500", "Internal Error", _data);
+            return new RestResp<T>("500", message);
         }
     }
 }

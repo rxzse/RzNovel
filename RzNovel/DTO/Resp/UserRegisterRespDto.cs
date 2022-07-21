@@ -12,7 +12,7 @@ namespace RzNovel.DTO.Resp
         [Display(Name="UserId")]
         public long id { get; set; }
 
-        [Display(Name = "Token")]
-        public string token { get; set; }
+        [Display(Name = "UserName")]
+        public string userName { get; set; }
     }
 }
