@@ -62,9 +62,48 @@ namespace RzNovel.Services
 
         }
 
-        public async Task<RestResp<bool>> saveBookChapter(ChapterAddReqDto dto)
+        public async Task<RestResp<string>> saveBookChapter(ChapterAddReqDto dto, long userId)
         {
-            throw new NotImplementedException();
+            int num = 0;
+            AuthorInfo authorInfo = await _context.AuthorInfos.FirstOrDefaultAsync(e => e.UserId == userId);
+            BookInfo bookInfo = await _context.BookInfos.FirstOrDefaultAsync(e => e.Id == dto.bookId);
+            if (authorInfo is null || bookInfo is null) return RestResp<string>.error("invalid operation");
+            if (bookInfo.AuthorId != authorInfo.Id) return RestResp<string>.error("unauthorize");
+            // 1 Query the latest chapter number
+            int chapterNum = 0;
+            var bookChapter = await _context.BookChapters.Where(e => e.BookId == dto.bookId).OrderByDescending(e => e.ChapterNum).FirstOrDefaultAsync();
+            if (bookChapter is not null) chapterNum = bookChapter.ChapterNum + 1;
+            // New book Chapter
+            BookChapter newBookChapter = new BookChapter();
+            newBookChapter.BookId = dto.bookId;
+            newBookChapter.ChapterNum = chapterNum;
+            newBookChapter.ChapterName = dto.chapterName;
+            newBookChapter.WordCount = dto.chapterContent.Length;
+            newBookChapter.CreateTime = newBookChapter.UpdateTime = DateTime.Now;
+            _context.BookChapters.Add(newBookChapter);
+            num += await _context.SaveChangesAsync();
+
+            // Save chapter content
+            BookContent bookContent = new BookContent();
+            bookContent.ChapterId = newBookChapter.Id;
+            bookContent.Content = dto.chapterContent;
+            bookContent.CreateTime = bookContent.UpdateTime = DateTime.Now;
+            _context.BookContents.Add(bookContent);
+            num += await _context.SaveChangesAsync();
+
+            // Update bookInfo
+            bookInfo.LastChapterId = newBookChapter.Id;
+            bookInfo.LastChapterName = newBookChapter.ChapterName;
+            bookInfo.LastChapterUpdateTime = DateTime.Now;
+            bookInfo.WordCount = bookInfo.WordCount + newBookChapter.WordCount;
+            newBookChapter.UpdateTime = DateTime.Now;
+            
+            _context.Entry(bookInfo).State = EntityState.Modified;
+            num += await _context.SaveChangesAsync();
+
+            // submit
+            if (num != 0) return RestResp<string>.ok("success"); ;
+            return RestResp<string>.error("database error");
         }
 
         public async Task<RestResp<PageRespDto<BookInfoRespDto>>> listAuthorBooks(PageReqDto dto, long userId)
@@ -93,6 +132,8 @@ namespace RzNovel.Services
                 bi.visitCount = e.VisitCount;
                 bi.bookStatus = e.BookStatus;
                 bi.updateTime = (DateTime)e.UpdateTime;
+                bi.lastChapterId = 0;
+                bi.lastChapterName = e.LastChapterName;
                 res.Add(bi);
             });
 
@@ -125,6 +166,7 @@ namespace RzNovel.Services
             bookInfo.BookName = dto.bookName;
             bookInfo.BookDesc = dto.bookDesc;
             bookInfo.BookStatus = dto.bookStatus;
+            bookInfo.UpdateTime = DateTime.Now;
             _context.Entry(bookInfo).State = EntityState.Modified;
             int num = await _context.SaveChangesAsync();
             if (num != 0) return RestResp<string>.ok("success"); ;

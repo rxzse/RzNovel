@@ -15,7 +15,7 @@ namespace RzNovel.Services
 
         public Task<RestResp<string>> updateBook(BookAddReqDto dto, long userId);
 
-        public Task<RestResp<bool>> saveBookChapter(ChapterAddReqDto dto);
+        public Task<RestResp<string>> saveBookChapter(ChapterAddReqDto dto, long userId);
         public RestResp<List<BookCategoryRespDto>> listBookCategories();
         public Task<RestResp<PageRespDto<BookInfoRespDto>>> listAuthorBooks(PageReqDto dto, long userId);
 

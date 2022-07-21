@@ -82,7 +82,7 @@ namespace RzNovel.Controllers
             return await _bookService.saveBook(dto, userId);
         }
 
-        [Route("manage/edit")]
+        [Route("manage/edit_book")]
         [HttpGet]
         public async Task<IActionResult> EditBook(long bookId)
         {
@@ -92,12 +92,29 @@ namespace RzNovel.Controllers
             return View(bRes);
         }
 
-        [Route("manage/edit")]
+        [Route("manage/edit_book")]
         [HttpPost]
         public async Task<ActionResult<RestResp<string>>> PostEditBook(BookAddReqDto dto)
         {
             long userId = long.Parse(HttpContext.User.Claims.First(e => e.Type.Equals("Id")).Value);
             return await _bookService.updateBook(dto, userId);
+        }
+
+        [Route("manage/add_chapter")]
+        [HttpGet]
+        public async Task<IActionResult> AddBookChapter()
+        {
+            ViewData["BigTitle"] = "Tạo truyện mới";
+            ViewData["SmallTitle"] = "Sáng tạo thế giới của bạn";
+            return View();
+        }
+
+        [Route("manage/add_chapter")]
+        [HttpPost]
+        public async Task<ActionResult<RestResp<string>>> PostAddBookChapter(ChapterAddReqDto dto)
+        {
+            long userId = long.Parse(HttpContext.User.Claims.First(e => e.Type.Equals("Id")).Value);
+            return await _bookService.saveBookChapter(dto, userId);
         }
     }
 }

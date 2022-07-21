@@ -50,7 +50,7 @@
             submitBut.addClass("disabled");
             submitBut.html(`<span class="spinner-border spinner-border-sm me-2" role="status"></span>Đang lưu...`)
             $.ajax({
-                url: 'edit',
+                url: 'edit_book',
                 type: "POST",
                 dataType: 'json',
                 data: $("#edit_book_form").serialize(),
