@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
+
+using Microsoft.AspNetCore.Http;
 
 using RzNovel.Services;
 using RzNovel.DTO.Req;
@@ -49,7 +52,7 @@ namespace RzNovel.Controllers
                 // auth success
                 var claims = new List<Claim>
                     {
-                        new Claim("ID", resp.data.id.ToString()),
+                        new Claim("Id", resp.data.id.ToString()),
                         new Claim(ClaimTypes.Name, resp.data.nickName),
                         new Claim(ClaimTypes.Role, resp.data.isAdmin ? "Admin" : "User"),
                     };

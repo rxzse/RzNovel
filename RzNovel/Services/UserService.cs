@@ -59,7 +59,7 @@ namespace RzNovel.Services
             UserLoginRespDto resp = new UserLoginRespDto();
             resp.id = userInfo.Id;
             resp.nickName = userInfo.NickName;
-            resp.isAdmin = true;
+            resp.isAdmin = "rxzse".Equals(userInfo.Username) ? true : false;
 
             return RestResp<UserLoginRespDto>.ok(resp);
         }

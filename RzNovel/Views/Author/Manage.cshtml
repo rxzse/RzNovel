@@ -1,0 +1,15 @@
+﻿@if (!"Success".Equals(ViewBag.Message)) {
+<div class="modal modal-blur fade show" id="modal-small" tabindex="-1" style="display: block;" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="modal-title">Đợi xét duyệt</div>
+                <div>Bạn đã đăng ký trở thành Tác giả, vui lòng chờ Admin xét duyệt!</div>
+            </div>
+            <div class="modal-footer">
+                <a type="button" class="btn btn-danger" href="/">Quay trở lại Trang chủ</a>
+            </div>
+        </div>
+    </div>
+</div>
+}

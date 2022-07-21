@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,12 +17,14 @@ namespace RzNovel.Controllers
         private readonly IHomeService _homeService;
         private readonly IBookService _bookService;
         private readonly IUserService _userService;
+        private readonly IAuthorService _authorService;
 
-        public TestController(IHomeService homeService, IBookService bookService, IUserService userService)
+        public TestController(IHomeService homeService, IBookService bookService, IUserService userService, IAuthorService authorService)
         {
             _homeService = homeService;
             _bookService = bookService;
             _userService = userService;
+            _authorService = authorService;
         }
 
         // GET: api/APIHomeBooks
@@ -56,6 +57,15 @@ namespace RzNovel.Controllers
         public async Task<ActionResult<RestResp<UserRegisterRespDto>>> PostRegister(UserRegisterReqDto dto)
         {
             return await _userService.Register(dto);
+        }
+
+        [Route("~/api/test/author/register")]
+        [HttpPost]
+        public async Task<ActionResult<RestResp<string>>> PostAuthorRegister(AuthorRegisterReqDto dto)
+        {
+            dto.userId = long.Parse(HttpContext.User.Claims.First(e => e.Type.Equals("Id")).Value);
+            return RestResp<string>.ok(dto.userId.ToString());
+            return await _authorService.Register(dto);
         }
     }
 }

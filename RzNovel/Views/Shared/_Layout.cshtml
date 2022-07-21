@@ -39,7 +39,7 @@
                             {
                                 <div class="nav-item d-none d-md-flex me-3">
                                     <div class="btn-list">
-                                        <a href="https://github.com/tabler/tabler" class="btn" target="_blank" rel="noreferrer">
+                                        <a href="author/manage" class="btn" rel="noreferrer">
                                             <!-- Download SVG icon from http://tabler-icons.io/i/brand-github -->
                                             Đăng truyện
                                         </a>
@@ -54,7 +54,7 @@
                                               style="background-image: url(https://static.cdnno.com/user/default/50.jpg)"></span>
                                         <div class="d-none d-xl-block ps-2">
                                             <div>@Context.User.Identity.Name</div>
-                                            <div class="mt-1 small text-muted">@Context.User.Identity.IsAuthenticated</div>
+                                            <div class="mt-1 small text-muted">@(Context.User.IsInRole("Admin") ? "Quản trị viên" : "User")</div>
                                         </div>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
@@ -93,7 +93,7 @@
                     <div class="container-xl">
                         <ul class="navbar-nav">
                             <li class="nav-item">
-                                <a class="nav-link" href="./index.html">
+                                <a class="nav-link" href="/">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
                                         <!-- Download SVG icon from http://tabler-icons.io/i/home -->
                                         <svg xmlns="http://www.w3.org/2000/svg"

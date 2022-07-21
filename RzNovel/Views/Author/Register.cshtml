@@ -1,0 +1,81 @@
+﻿@{
+    Layout = null;
+}
+
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Author Register - RzNovel</title>
+    <!-- CSS files -->
+    <link href="~/css/tabler.min.css" rel="stylesheet" />
+    <link href="~/css/tabler-flags.min.css" rel="stylesheet" />
+    <link href="~/css/tabler-payments.min.css" rel="stylesheet" />
+    <link href="~/css/tabler-vendors.min.css" rel="stylesheet" />
+    <link href="~/css/demo.min.css" rel="stylesheet" />
+</head>
+<body class=" border-top-wide border-primary d-flex flex-column">
+    <div class="page page-center">
+        <div class="container-tight py-4">
+            <div class="text-center mb-4">
+                <a href="." class="navbar-brand navbar-brand-autodark"><img src="~/rxz.svg" height="36" alt=""></a>
+            </div>
+            <form class="card card-md" id="signin_form" autocomplete="off">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">Đăng ký tác giả</h2>
+                    <div class="mb-3">
+                        <label class="form-label">Pen Name</label>
+                        <input name="penName" type="text" class="form-control" placeholder="Enter username" autocomplete="off">
+                        <div class="invalid-feedback">PenName không hợp lệ</div>
+                    </div>
+                    
+
+                    <div class="form-footer">
+                        <button id="submit" type="submit" class="btn btn-primary w-100">Đăng ký</button>
+                    </div>
+
+
+                </div>
+
+            </form>
+            
+        </div>
+    </div>
+    <!-- Libs JS -->
+    <!-- Tabler Core -->
+    <script src="~/js/tabler.min.js" defer></script>
+    <script src="~/js/demo.min.js" defer></script>
+    <script src="~/libs/jquery/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#signin_form").on('submit', function (e) {
+                e.preventDefault();
+                var submitBut = $("#submit");
+                submitBut.addClass("disabled");
+                submitBut.html(`<span class="spinner-border spinner-border-sm me-2" role="status"></span>Đang xác thực...`)
+                $.ajax({
+                    url: 'register',
+                    type: "POST",
+                    dataType: 'json',
+                    data: $("#signin_form").serialize(),
+                    
+
+                    success: function (result) {
+                        if (result.code == "200") return setTimeout(() => location.href="manage", 1000);
+                        if (result.message.search("duplicate") != -1) $("[name='penName']").addClass("is-invalid");
+                        submitBut.removeClass("disabled");
+                        submitBut.html("Đăng ký");
+
+                    },
+                    error: function (xhr, resp, text) {
+                        console.log(xhr, resp, text);
+                    }
+                })
+            })
+        })
+    </script>
+</body>
+</html>
