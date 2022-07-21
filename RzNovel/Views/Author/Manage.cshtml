@@ -1,19 +1,138 @@
-﻿@{
+﻿@using RzNovel.Common.Resp;
+@using RzNovel.DTO.Resp;
+@{
     Layout = "_VerticalLayout";
+    PageRespDto<BookInfoRespDto> pageRes = (PageRespDto<BookInfoRespDto>)ViewBag.Page;
 }
 
-@if (!"Success".Equals(ViewBag.Message)) {
-<div class="modal modal-blur fade show" id="modal-small" tabindex="-1" style="display: block;" aria-modal="true" role="dialog">
-    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="modal-title">Đợi xét duyệt</div>
-                <div>Bạn đã đăng ký trở thành Tác giả, vui lòng chờ Admin xét duyệt!</div>
-            </div>
-            <div class="modal-footer">
-                <a type="button" class="btn btn-danger" href="/">Quay trở lại Trang chủ</a>
+@if (!"Success".Equals(ViewBag.Message))
+{
+    <div class="modal modal-blur fade show" id="modal-small" tabindex="-1" style="display: block;" aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="modal-title">Đợi xét duyệt</div>
+                    <div>Bạn đã đăng ký trở thành Tác giả, vui lòng chờ Admin xét duyệt!</div>
+                </div>
+                <div class="modal-footer">
+                    <a type="button" class="btn btn-danger" href="/">Quay trở lại Trang chủ</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
 }
+
+<div class="col-12">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Danh sách truyện</h3>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table card-table table-vcenter text-nowrap datatable">
+                <thead>
+                    <tr>
+                        <th class="w-1">
+                            No. <!-- Download SVG icon from http://tabler-icons.io/i/chevron-up -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-sm text-dark icon-thick" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><polyline points="6 15 12 9 18 15"></polyline></svg>
+                        </th>
+                        <th>Tên truyện</th>
+                        <th>Thể loại</th>
+                        <th>Lượt xem</th>
+                        <th>Số từ</th>
+                        <th>Mới nhất</th>
+                        <th>Cập nhật</th>
+                        <th>Trạng thái</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (BookInfoRespDto bi in pageRes.list) 
+                    {
+                    <tr>
+                        
+                        <td><span class="text-muted">@bi.id</span></td>
+                        <td><strong>@bi.bookName</strong></td>
+                        <td>
+                            <span class="status status-green">
+                                @bi.categoryName
+                            </span>
+                        </td>
+                        <td>@bi.visitCount</td>
+                        <td>@bi.wordCount</td>
+                        <td>@bi.lastChapterName</td>
+                        <td>@bi.updateTime</td>
+                        <td>
+                            @if (bi.bookStatus == 0)
+                            {
+                                <span class='badge bg-secondary me-1'></span>
+                                <strong>Dự thảo</strong>
+                            }
+                            @if (bi.bookStatus == 1)
+                            {
+                                <span class='badge bg-warning me-1'></span>
+                                <strong>Đang ra</strong>
+                            }
+                            @if (bi.bookStatus == 2)
+                            {
+                                <span class='badge bg-success me-1'></span>
+                                <strong>Hoàn thành</strong>
+                            }
+                            @if (bi.bookStatus == 3)
+                            {
+                                <span class='badge bg-danger me-1'></span>
+                                <strong>Tạm dừng</strong>
+                            }
+                        </td>
+                        <td class="text-end">
+                            <span class="dropdown">
+                                <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
+                                <div class="dropdown-menu dropdown-menu-end" style="">
+                                    <a class="dropdown-item" href="/author/manage/edit?bookId=@bi.id">
+                                        Chỉnh sửa truyện
+                                    </a>
+                                    <a class="dropdown-item" href="#">
+                                        Quản lý chapter
+                                    </a>
+                                </div>
+                            </span>
+                        </td>
+                    </tr>
+                    }
+                    
+
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer d-flex align-items-center">
+            
+            <ul class="pagination m-0 ms-auto">
+                <li class="page-item @(pageRes.pageNum > 1 ? "" : "disabled")">
+                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true" onclick="urlSearch('pageNum', 1)">
+                        <!-- Download SVG icon from http://tabler-icons.io/i/chevron-left -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><polyline points="15 6 9 12 15 18"></polyline></svg>
+                        first
+                    </a>
+                </li>
+
+                @for (var i = 0; i <= 4; i++)
+                {
+                    var pi = pageRes.pageNum - 2 + i;
+                    if (pi >= 1 && pi <= pageRes.getPages())
+                    {
+                        <li class="page-item @(pageRes.pageNum == pi ? "active" : "")"><a class="page-link" href="#" onclick="urlSearch('pageNum', @pi)">@pi</a></li>
+                    }
+                }
+                
+                <li class="page-item @(pageRes.pageNum >= pageRes.getPages() ? "disabled" : "")">
+                    <a class="page-link" href="#" onclick="urlSearch('pageNum', @(pageRes.getPages() == 0 ? 1 : pageRes.getPages()))">
+                        next <!-- Download SVG icon from http://tabler-icons.io/i/chevron-right -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><polyline points="9 6 15 12 9 18"></polyline></svg>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script src="~/me/app.js"></script>

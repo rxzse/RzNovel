@@ -9,6 +9,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
+using RzNovel.Services;
+using RzNovel.DTO.Req;
+using RzNovel.DTO.Resp;
+using RzNovel.Common.Resp;
+
 
 namespace RzNovel.Controllers
 {
@@ -16,13 +21,19 @@ namespace RzNovel.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IBookService _bookService;
+
+        public HomeController(ILogger<HomeController> logger, IBookService bookService)
         {
             _logger = logger;
+            _bookService = bookService;
         }
 
-        public IActionResult Index()
+
+
+        public async Task<IActionResult> Index()
         {
+            
             return View();
         }
 

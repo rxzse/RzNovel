@@ -67,5 +67,13 @@ namespace RzNovel.Controllers
             return RestResp<string>.ok(dto.userId.ToString());
             return await _authorService.Register(dto);
         }
+
+        [Route("~/api/test/author/list_books")]
+        [HttpGet]
+        public async Task<ActionResult<RestResp<PageRespDto<BookInfoRespDto>>>> GetAuthorBooks(PageReqDto dto)
+        {
+            
+            return await _bookService.listAuthorBooks(dto, 4);
+        }
     }
 }

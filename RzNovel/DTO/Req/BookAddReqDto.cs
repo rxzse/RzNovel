@@ -29,6 +29,8 @@ namespace RzNovel.DTO.Req
         [Display(Name = "BookDesc")]
         public string bookDesc { get; set; }
 
+        public byte bookStatus { get; set; } = 0;
 
+        public long id { get; set; } = 0L;
     }
 }

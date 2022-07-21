@@ -1,40 +1,37 @@
 ﻿@{
     Layout = "_VerticalLayout";
 }
-@using RzNovel.DTO.Resp;
-@using RzNovel.Services;
-@inject IBookService _bookSerivce;
-@{
-
-    List<BookCategoryRespDto> lCates = _bookSerivce.listBookCategories().data;
-}
-
-
+@model RzNovel.DTO.Resp.BookInfoRespDto;
 
 <div class="col-12">
-    <form id="add_book_form" method="post" class="card">
+    <form id="edit_book_form" method="post" class="card">
         <div class="card-body">
             <div class="row align-items-center">
                 <div class="mb-3">
                     <label class="form-label required">Tên truyện</label>
-                    <input type="text" class="form-control" name="bookName" placeholder="Nhập tên truyện">
+                    <input type="text" class="form-control" name="bookName" placeholder="Nhập tên truyện" value="@Model.bookName">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Mô tả</label>
-                    <textarea rows="10" class="form-control" name="bookDesc" placeholder="Giới thiệu về truyện"></textarea>
+                    <textarea rows="10" class="form-control" name="bookDesc" placeholder="Giới thiệu về truyện">@Model.bookDesc</textarea>
                 </div>
+
                 <div class="mb-3">
                     <div class="form-label required">Thể loại</div>
-                    <select class="form-select" name="categoryId">
-                        @foreach (var _c in lCates)
-                        {
-                            <option value="@_c.id">@_c.name</option>
-                        }
+                    <input type="text" class="form-control" name="categoryName" placeholder="Thể loại truyện" value="@Model.categoryName" disabled>
+                </div>
 
+                <div class="mb-3">
+                    <div class="form-label required">Trạng thái</div>
+                    <select class="form-select" name="bookStatus">
+                        <option value="0">Dự thảo</option>
+                        <option value="1">Đang ra</option>
+                        <option value="2">Hoàn thành</option>
+                        <option value="3">Tạm dừng</option>
                     </select>
                 </div>
 
-                <input type="text" class="form-control" name="categoryName" value="Mục mới" hidden>
+                <input type="text" class="form-control" name="id" value="@Model.id" hidden>
 
                 <div class="form-footer">
                     <button id="submit" type="submit" class="btn btn-primary w-100">Lưu truyện</button>
@@ -46,26 +43,25 @@
 
 <script>
     $(document).ready(function () {
-        $("#add_book_form").on('submit', function (e) {
+        $("#edit_book_form").on('submit', function (e) {
             e.preventDefault();
             $("[name='categoryName']").val($("[name='categoryId'] option:selected").text());
             var submitBut = $("#submit");
             submitBut.addClass("disabled");
             submitBut.html(`<span class="spinner-border spinner-border-sm me-2" role="status"></span>Đang lưu...`)
             $.ajax({
-                url: 'add_book',
+                url: 'edit',
                 type: "POST",
                 dataType: 'json',
-                data: $("#add_book_form").serialize(),
+                data: $("#edit_book_form").serialize(),
 
 
                 success: function (result) {
-                    if (result.code == "200") return setTimeout(() => swal("Thêm truyện", "Thêm truyện thành công!\nSẽ điều hướng về trang Quản lý", "success").then(() => location.href = "./"), 1000);
-                    if (result.message.search("bookName") != -1) $("[name='bookName']").addClass("is-invalid");
-
                     submitBut.removeClass("disabled");
                     submitBut.html("Lưu truyện");
 
+                    if (result.code == "200") return setTimeout(() => swal("Chỉnh sửa", "Chỉnh sửa thành công!", "success").then(() => location.href = "./"), 1000);
+                    if (result.message.search("bookName") != -1) $("[name='bookName']").addClass("is-invalid");
                 },
                 error: function (xhr, resp, text) {
                     console.log(xhr, resp, text);

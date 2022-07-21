@@ -12,8 +12,13 @@ namespace RzNovel.Services
     public interface IBookService
     {
         public Task<RestResp<string>> saveBook(BookAddReqDto dto, long userId);
-        public Task<RestResp<bool>> saveBookChapter(ChapterAddReqDto dto);
 
-        public Task<RestResp<List<BookCategoryRespDto>>> listBookCategories();
+        public Task<RestResp<string>> updateBook(BookAddReqDto dto, long userId);
+
+        public Task<RestResp<bool>> saveBookChapter(ChapterAddReqDto dto);
+        public RestResp<List<BookCategoryRespDto>> listBookCategories();
+        public Task<RestResp<PageRespDto<BookInfoRespDto>>> listAuthorBooks(PageReqDto dto, long userId);
+
+        public Task<RestResp<BookInfoRespDto>> getBookById(long bookId);
     }
 }

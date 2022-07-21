@@ -1,5 +1,10 @@
 ﻿@using Microsoft.AspNetCore.Authorization
-
+@using RzNovel.DTO.Resp;
+@using RzNovel.Services;
+@inject IBookService _bookSerivce;
+@{
+    List<BookCategoryRespDto> lCates = _bookSerivce.listBookCategories().data;
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -134,24 +139,20 @@
                                 <div class="dropdown-menu">
                                     <div class="dropdown-menu-columns">
                                         <div class="dropdown-menu-column">
-                                            <a class="dropdown-item active" href="#">
-                                                Empty page
-                                            </a>
-                                            <a class="dropdown-item" href="#">
-                                                Accordion
-                                            </a>
+                                            @if (lCates != null)
+                                            {
+                                                foreach (var _c in lCates)
+                                                {
 
-                                        </div>
-                                        <div class="dropdown-menu-column">
-                                            <a class="dropdown-item" href="#">
-                                                Charts
-                                            </a>
-                                            <a class="dropdown-item" href="#">
-                                                <!-- Download SVG icon from http://tabler-icons.io/i/pie-chart -->
-                                                Pagination
-                                            </a>
+                                                    <a class="dropdown-item" href="#">
+                                                        @_c.name
+                                                    </a>
 
-                                        </div>
+                                                }
+                                            }
+                                         </div>
+
+
                                     </div>
                                 </div>
                             </li>
