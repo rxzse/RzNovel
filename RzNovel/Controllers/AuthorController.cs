@@ -100,12 +100,35 @@ namespace RzNovel.Controllers
             return await _bookService.updateBook(dto, userId);
         }
 
+        /// <summary>
+        /// Manage Book Chapter
+        /// </summary>
+        /// <returns></returns>
+
+        [Route("manage/chapter")]
+        [HttpGet]
+        public async Task<IActionResult> BookChapter(PageReqDto dto, long bookId)
+        {
+            
+
+            BookInfoRespDto bRes = (await _bookService.getBookById(bookId)).data;
+            PageRespDto<BookChapterRespDto> pageRes = (await _bookService.listBookChapters(dto, bookId)).data;
+            ViewBag.Page = pageRes;
+
+            ViewData["BigTitle"] = "Truyện: " + bRes.bookName;
+            ViewData["SmallTitle"] = "Quản lý Chapter";
+
+            return View();
+        }
+
         [Route("manage/add_chapter")]
         [HttpGet]
-        public async Task<IActionResult> AddBookChapter()
+        public async Task<IActionResult> AddBookChapter(long bookId)
         {
-            ViewData["BigTitle"] = "Tạo truyện mới";
-            ViewData["SmallTitle"] = "Sáng tạo thế giới của bạn";
+            BookInfoRespDto bRes = (await _bookService.getBookById(bookId)).data;
+            ViewData["BigTitle"] = "Truyện: " + bRes.bookName;
+            ViewData["SmallTitle"] = "Tạo Chapter mới";
+            ViewBag.BookInfo = bRes;
             return View();
         }
 

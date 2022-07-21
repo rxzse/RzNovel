@@ -19,6 +19,8 @@ namespace RzNovel.Services
         public RestResp<List<BookCategoryRespDto>> listBookCategories();
         public Task<RestResp<PageRespDto<BookInfoRespDto>>> listAuthorBooks(PageReqDto dto, long userId);
 
+        public Task<RestResp<PageRespDto<BookChapterRespDto>>> listBookChapters(PageReqDto dto, long bookId);
+
         public Task<RestResp<BookInfoRespDto>> getBookById(long bookId);
     }
 }

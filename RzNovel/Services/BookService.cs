@@ -172,5 +172,33 @@ namespace RzNovel.Services
             if (num != 0) return RestResp<string>.ok("success"); ;
             return RestResp<string>.error("database error");
         }
+
+        public async Task<RestResp<PageRespDto<BookChapterRespDto>>> listBookChapters(PageReqDto dto, long bookId)
+        {
+            var cQuery = _context.BookChapters.Where(e => e.BookId == bookId).OrderByDescending(e => e.ChapterNum);
+            // paginating
+            int startIndex = 0;
+            if (dto.pageNum != 1)
+            {
+                startIndex = dto.pageNum - 1;
+                startIndex = startIndex * dto.pageSize;
+            }
+            var pageQuery = cQuery.Skip(startIndex).Take(dto.pageSize).ToList();
+
+            // bind List 
+            List<BookChapterRespDto> res = new List<BookChapterRespDto>();
+            pageQuery.ForEach(e =>
+            {
+                BookChapterRespDto bi = new BookChapterRespDto();
+                bi.id = e.Id;
+                bi.chapterName = e.ChapterName;
+                bi.chapterNum = e.ChapterNum;
+                bi.chapterUpdateTime = (DateTime)e.UpdateTime;
+                bi.chapterWordCount = e.WordCount;
+                res.Add(bi);
+            });
+
+            return RestResp<PageRespDto<BookChapterRespDto>>.ok(PageRespDto<BookChapterRespDto>.of(dto.pageNum, dto.pageSize, cQuery.Count(), res));
+        }
     }
 }
