@@ -22,11 +22,13 @@ namespace RzNovel.Controllers
     {
         private readonly IUserService _userService;
         private readonly IAuthorService _authorService;
+        private readonly IBookService _bookService;
 
-        public AuthorController(IUserService userService, IAuthorService authorService)
+        public AuthorController(IUserService userService, IAuthorService authorService, IBookService bookService)
         {
             _userService = userService;
             _authorService = authorService;
+            _bookService = bookService;
         }
 
         [Route("manage")]
@@ -54,6 +56,22 @@ namespace RzNovel.Controllers
         {
             dto.userId = long.Parse(HttpContext.User.Claims.First(e => e.Type.Equals("Id")).Value);
             return await _authorService.Register(dto);
+        }
+
+        [Route("manage/add_book")]
+        [HttpGet]
+        public async Task<IActionResult> AddBook()
+        {
+            ViewBag.Categories = (await _bookService.listBookCategories()).data;
+            return View();
+        }
+
+        [Route("manage/add_book")]
+        [HttpPost]
+        public async Task<ActionResult<RestResp<string>>> PostAddBook(BookAddReqDto dto)
+        {
+            long userId = long.Parse(HttpContext.User.Claims.First(e => e.Type.Equals("Id")).Value);
+            return await _bookService.saveBook(dto, userId);
         }
     }
 }

@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RzNovel.Models;
 using RzNovel.DTO.Req;
 using RzNovel.DTO.Resp;
 using RzNovel.Common.Resp;
+using Microsoft.AspNetCore.Http;
 
 namespace RzNovel.Services
 {
@@ -19,25 +22,41 @@ namespace RzNovel.Services
             _context = context;
         }
 
-        public async Task<RestResp<string>> saveBook(BookAddReqDto dto)
+        public async Task<RestResp<List<BookCategoryRespDto>>> listBookCategories()
+        {
+            List<BookCategoryRespDto> res = new List<BookCategoryRespDto>();
+            await _context.BookCategories.ForEachAsync(e => {
+                BookCategoryRespDto ii = new BookCategoryRespDto();
+                    ii.id = e.Id;
+                    ii.name = e.Name;
+                    res.Add(ii);
+                });
+            return RestResp<List<BookCategoryRespDto>>.ok(res);
+        }
+
+        public async Task<RestResp<string>> saveBook(BookAddReqDto dto, long userId)
         {
             // check Book Name Exists
             bool isBookExists = _context.BookInfos.Any(e => e.BookName.Equals(dto.bookName));
-            if (isBookExists) return RestResp<string>.error("Book name is duplicated");
+            if (isBookExists) return RestResp<string>.error("bookName duplicated");
 
             BookInfo bookInfo = new BookInfo();
-            bookInfo.AuthorId = 11111;
-            bookInfo.AuthorName = "Thái Việt";
+
+            // bind userId
+            AuthorInfo authorInfo = _context.AuthorInfos.FirstOrDefault(e => e.UserId == userId);
+
+            bookInfo.AuthorId = authorInfo.Id;
+            bookInfo.AuthorName = authorInfo.PenName;
             bookInfo.CategoryId = dto.categoryId;
             bookInfo.CategoryName = dto.categoryName;
             bookInfo.BookName = dto.bookName;
             bookInfo.BookDesc = dto.bookDesc;
-            bookInfo.PicUrl = dto.picUrl;
+            bookInfo.PicUrl = "#";
             bookInfo.CreateTime = bookInfo.UpdateTime = DateTime.Now;
 
             _context.BookInfos.Add(bookInfo);
             int num = await _context.SaveChangesAsync();
-            if (num != 0) return RestResp<string>.ok($"{num} items has been created"); ;
+            if (num != 0) return RestResp<string>.ok("success"); ;
 
             return RestResp<string>.error("database error"); ;
 

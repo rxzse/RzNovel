@@ -1,0 +1,94 @@
+﻿@using RzNovel.DTO.Resp;
+@{
+    Layout = "_VerticalLayout";
+    List<BookCategoryRespDto> lCates = (List<BookCategoryRespDto>)ViewBag.Categories;
+}
+
+<div class="row row-deck row-cards">
+    <div class="col-12">
+        <div class="card card-md">
+            <div class="card-stamp card-stamp-lg">
+                <div class="card-stamp-icon bg-primary">
+                    <!-- Download SVG icon from http://tabler-icons.io/i/ghost -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 11a7 7 0 0 1 14 0v7a1.78 1.78 0 0 1 -3.1 1.4a1.65 1.65 0 0 0 -2.6 0a1.65 1.65 0 0 1 -2.6 0a1.65 1.65 0 0 0 -2.6 0a1.78 1.78 0 0 1 -3.1 -1.4v-7"></path><line x1="10" y1="10" x2="10.01" y2="10"></line><line x1="14" y1="10" x2="14.01" y2="10"></line><path d="M10 14a3.5 3.5 0 0 0 4 0"></path></svg>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-10">
+                        <h3 class="h1">Thêm truyện mới</h3>
+                        <div class="markdown text-muted">
+                            Bắt đầu sáng tạo thế giới của riêng bạn
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <form id="add_book_form" method="post" class="card">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="mb-3">
+                        <label class="form-label required">Tên truyện</label>
+                        <input type="text" class="form-control" name="bookName" placeholder="Nhập tên truyện">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Mô tả</label>
+                        <textarea rows="10" class="form-control" name="bookDesc" placeholder="Giới thiệu về truyện"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-label required">Thể loại</div>
+                        <select class="form-select" name="categoryId">
+                            @foreach (var _c in lCates)
+                            {
+                                <option value="@_c.id">@_c.name</option>
+                            }
+                            
+                        </select>
+                    </div>
+
+                    <input type="text" class="form-control" name="categoryName" value="Mục mới" hidden>
+
+                    <div class="form-footer">
+                        <button id="submit" type="submit" class="btn btn-primary w-100">Lưu truyện</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+        $(document).ready(function () {
+            $("#add_book_form").on('submit', function (e) {
+                e.preventDefault();
+                $("[name='categoryName']").val($("[name='categoryId'] option:selected").text());
+                var submitBut = $("#submit");
+                submitBut.addClass("disabled");
+                submitBut.html(`<span class="spinner-border spinner-border-sm me-2" role="status"></span>Đang lưu...`)
+                $.ajax({
+                    url: 'add_book',
+                    type: "POST",
+                    dataType: 'json',
+                    data: $("#add_book_form").serialize(),
+
+
+                    success: function (result) {
+                        if (result.code == "200") return setTimeout(() => swal("Thêm truyện", "Thêm truyện thành công!\nSẽ điều hướng về trang Quản lý", "success").then(()=>location.href="./"), 1000);
+                        if (result.message.search("bookName") != -1) $("[name='bookName']").addClass("is-invalid");
+                        
+                        submitBut.removeClass("disabled");
+                        submitBut.html("Lưu truyện");
+
+                    },
+                    error: function (xhr, resp, text) {
+                        console.log(xhr, resp, text);
+                    }
+                })
+            })
+        })
+</script>
+

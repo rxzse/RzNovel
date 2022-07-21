@@ -1,4 +1,8 @@
-﻿@if (!"Success".Equals(ViewBag.Message)) {
+﻿@{
+    Layout = "_VerticalLayout";
+}
+
+@if (!"Success".Equals(ViewBag.Message)) {
 <div class="modal modal-blur fade show" id="modal-small" tabindex="-1" style="display: block;" aria-modal="true" role="dialog">
     <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
         <div class="modal-content">
