@@ -52,8 +52,13 @@ namespace RzNovel.Controllers
 
         [Route("register")]
         [HttpGet]
-        public IActionResult Register()
+        public async Task<IActionResult> Register()
         {
+            long userId = long.Parse(HttpContext.User.Claims.First(e => e.Type.Equals("Id")).Value);
+            // check Status
+            RestResp<string> res = await _authorService.GetStatus(userId);
+            if (!"non_exists".Equals(res.message)) return Redirect("manage");
+
             return View();
         }
 
