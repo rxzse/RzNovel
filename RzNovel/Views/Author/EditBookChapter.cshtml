@@ -35,6 +35,16 @@
 
 <script>
     $(document).ready(function () {
+        $("[name='chapterContent']").tinymce({
+            height: 500,
+            menubar: false,
+            plugins: "paste",
+            toolbar: 'undo redo paste',
+            skin: "oxide-dark",
+            content_css: "dark",
+            paste_as_text: true
+        });
+
         $("#edit_chapter_form").on('submit', function (e) {
             e.preventDefault();
             

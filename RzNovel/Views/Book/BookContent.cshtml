@@ -1,0 +1,56 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@using RzNovel.DTO.Resp;
+@{
+    BookContentAboutRespDto bookContent = (BookContentAboutRespDto)ViewBag.BookContent;
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-10 col-xl-9">
+        <div class="card card-lg">
+            <div class="card-header sticky-top" style="background: #1e293b">
+                <div>
+                    <h3 class="card-title">
+                        @bookContent.bookInfo.bookName
+                    </h3>
+                    <p class="card-subtitle">
+                        Chương @(bookContent.chapterInfo.chapterNum + 1) - @bookContent.chapterInfo.chapterName
+                    </p>
+                </div>
+                <div class="card-actions btn-actions">
+                    <a href="/book/details/@bookContent.bookInfo.id" class="btn-action">
+                        <!-- Download SVG icon from http://tabler-icons.io/i/refresh -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-list" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <line x1="9" y1="6" x2="20" y2="6"></line>
+                            <line x1="9" y1="12" x2="20" y2="12"></line>
+                            <line x1="9" y1="18" x2="20" y2="18"></line>
+                            <line x1="5" y1="6" x2="5" y2="6.01"></line>
+                            <line x1="5" y1="12" x2="5" y2="12.01"></line>
+                            <line x1="5" y1="18" x2="5" y2="18.01"></line>
+                        </svg>
+                    </a>
+                    <a href="/book/read/@ViewBag.PreId" class="btn-action">
+                        <!-- Download SVG icon from http://tabler-icons.io/i/refresh -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <polyline points="15 6 9 12 15 18"></polyline>
+                        </svg>
+                    </a>
+                    <a href="/book/read/@ViewBag.NextId" class="btn-action">
+                        <!-- Download SVG icon from http://tabler-icons.io/i/refresh -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <polyline points="9 6 15 12 9 18"></polyline>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <div class="card-body markdown">
+                @Html.Raw(bookContent.content)
+            </div>
+        </div>
+    </div>
+</div>

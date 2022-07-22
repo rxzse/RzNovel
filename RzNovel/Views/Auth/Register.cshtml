@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Sign up - RzNovel</title>
+    <title>Đăng ký - RzNovel</title>
     <!-- CSS files -->
     <link href="~/css/tabler.min.css" rel="stylesheet" />
     <link href="~/css/tabler-flags.min.css" rel="stylesheet" />
@@ -26,16 +26,29 @@
             <form class="card card-md" id="signup_form" autocomplete="off">
                 <div class="card-body">
                     <div class="card-body">
-                        <h2 class="card-title text-center mb-4">Create new account</h2>
-                        
+                        <h2 class="card-title text-center mb-4">Tạo một tài khoản mới</h2>
+
                         <div class="mb-3">
-                            <label class="form-label">User Name</label>
+                            <label class="form-label">Tài khoản</label>
                             <input name="username" type="text" class="form-control" placeholder="Enter username">
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Password</label>
+                            <label class="form-label">Mật khẩu</label>
                             <div class="input-group input-group-flat">
                                 <input name="password" type="password" class="form-control" placeholder="Password" autocomplete="off">
+                                <span class="input-group-text">
+                                    <a href="#" class="link-secondary" title="Show password" data-bs-toggle="tooltip">
+                                        <!-- Download SVG icon from http://tabler-icons.io/i/eye -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><circle cx="12" cy="12" r="2" /><path d="M22 12c-2.667 4.667 -6 7 -10 7s-7.333 -2.333 -10 -7c2.667 -4.667 6 -7 10 -7s7.333 2.333 10 7" /></svg>
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Nhập lại mật khẩu</label>
+                            <div class="input-group input-group-flat">
+                                <input name="re_password" type="password" class="form-control" placeholder="Re-enter pasword" autocomplete="off">
                                 <span class="input-group-text">
                                     <a href="#" class="link-secondary" title="Show password" data-bs-toggle="tooltip">
                                         <!-- Download SVG icon from http://tabler-icons.io/i/eye -->
@@ -52,7 +65,7 @@
                         </div>
 
                         <div class="form-footer">
-                            <button id="submit" type="submit" class="btn btn-primary w-100">Sign up</button>
+                            <button id="submit" type="submit" class="btn btn-primary w-100">Đăng ký</button>
                         </div>
 
 
@@ -60,7 +73,7 @@
 
             </form>
             <div class="text-center text-muted mt-3">
-                Already have account? <a href="login" tabindex="-1">Sign in</a>
+                Bạn đã có tài khoản trên hệ thống <a href="login" tabindex="-1">Đăng nhập</a>
             </div>
         </div>
     </div>
@@ -75,7 +88,7 @@
                 e.preventDefault();
                 var submitBut = $("#submit");
                 submitBut.addClass("disabled");
-                submitBut.html(`<span class="spinner-border spinner-border-sm me-2" role="status"></span>Sign up...`)
+                submitBut.html(`<span class="spinner-border spinner-border-sm me-2" role="status"></span>Đang xử lý...`)
                 $.ajax({
                     url: 'register',
                     type: "POST",
@@ -88,7 +101,7 @@
                         if (result.message.search("username") != -1) $("[name='username']").addClass("is-invalid");
                         if (result.message.search("password") != -1) $("[name='password']").addClass("is-invalid");
                         submitBut.removeClass("disabled");
-                        submitBut.html("Sign up");
+                        submitBut.html("Đăng ký");
 
                     },
                     error: function (xhr, resp, text) {

@@ -17,6 +17,7 @@
     <link href="~/css/tabler-payments.min.css" rel="stylesheet" />
     <link href="~/css/tabler-vendors.min.css" rel="stylesheet" />
     <link href="~/css/demo.min.css" rel="stylesheet" />
+
 </head>
 <body>
     <div class="page">
@@ -26,7 +27,7 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
-                    <a href=".">
+                    <a href="/">
                         <img src="~/rxz.svg" width="220" height="48" alt="Tabler" class="navbar-brand-image">
                     </a>
                 </h1>
@@ -35,7 +36,7 @@
                         <div class="btn-list">
                             @if (!Context.User.Identity.IsAuthenticated)
                             {
-                                <a href="auth/login" class="btn" rel="noreferrer">
+                                <a href="/auth/login" class="btn" rel="noreferrer">
                                     <!-- Download SVG icon from http://tabler-icons.io/i/brand-github -->
                                     Đăng nhập
                                 </a>
@@ -44,7 +45,7 @@
                             {
                                 <div class="nav-item d-none d-md-flex me-3">
                                     <div class="btn-list">
-                                        <a href="author/manage" class="btn" rel="noreferrer">
+                                        <a href="/author/manage" class="btn" rel="noreferrer">
                                             <!-- Download SVG icon from http://tabler-icons.io/i/brand-github -->
                                             Đăng truyện
                                         </a>
@@ -67,7 +68,7 @@
                                         <a href="#" class="dropdown-item">Feedback</a>
                                         <div class="dropdown-divider"></div>
                                         <a href="#" class="dropdown-item">Settings</a>
-                                        <a href="auth/logout" class="dropdown-item">Đăng xuất</a>
+                                        <a href="/auth/logout" class="dropdown-item">Đăng xuất</a>
                                     </div>
                                 </div>
 
@@ -150,7 +151,7 @@
 
                                                 }
                                             }
-                                         </div>
+                                        </div>
 
 
                                     </div>
@@ -279,5 +280,9 @@
     <script src="~/js/tabler.min.js" defer></script>
     <script src="~/js/demo.min.js" defer></script>
     <script src="~/libs/jquery/jquery-3.6.0.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/timeago.js/4.0.2/timeago.full.min.js"></script>
+    <script>
+        $(document).ready(() => $("#timeAgo").text(timeago.format($("#timeAgo").text(), "vi")))
+    </script>
 </body>
 </html>

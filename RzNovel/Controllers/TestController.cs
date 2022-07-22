@@ -83,5 +83,37 @@ namespace RzNovel.Controllers
 
             return await _bookService.getBookContentAbout(id);
         }
+
+        [Route("~/api/test/book_chapters")]
+        [HttpGet]
+        public async Task<ActionResult<RestResp<List<BookChapterRespDto>>>> GetListChapter(long id)
+        {
+
+            return await _bookService.listChapters(id);
+        }
+
+        [Route("~/api/test/last_chapter")]
+        [HttpGet]
+        public async Task<ActionResult<RestResp<BookChapterAboutRespDto>>> GetLastChapter(long id)
+        {
+
+            return await _bookService.getLastChapterAbout(id);
+        }
+
+        [Route("~/api/test/pre_chapter")]
+        [HttpGet]
+        public async Task<ActionResult<RestResp<long>>> GetPreChapter(long id)
+        {
+
+            return await _bookService.getPreChapterId(id);
+        }
+
+        [Route("~/api/test/next_chapter")]
+        [HttpGet]
+        public async Task<ActionResult<RestResp<long>>> GetNextChapter(long id)
+        {
+
+            return await _bookService.getNextChapterId(id);
+        }
     }
 }

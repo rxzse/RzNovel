@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Sign in - RzNovel</title>
+    <title>Đăng nhập - RzNovel</title>
     <!-- CSS files -->
     <link href="~/css/tabler.min.css" rel="stylesheet" />
     <link href="~/css/tabler-flags.min.css" rel="stylesheet" />
@@ -25,15 +25,15 @@
             </div>
             <form class="card card-md" id="signin_form" autocomplete="off">
                 <div class="card-body">
-                    <h2 class="card-title text-center mb-4">Login to your account</h2>
+                    <h2 class="card-title text-center mb-4">Đăng nhập vào hệ thống</h2>
                     <div class="mb-3">
-                        <label class="form-label">User name</label>
+                        <label class="form-label">Tài khoản</label>
                         <input name="username" type="text" class="form-control" placeholder="Enter username" autocomplete="off">
-                        <div class="invalid-feedback">Username not exists</div>
+                        
                     </div>
                     <div class="mb-2">
                         <label class="form-label">
-                            Password
+                            Mật khẩu
 
                         </label>
                         <div class="input-group input-group-flat">
@@ -47,12 +47,12 @@
                             </span>
 
                         </div>
-                        <div class="invalid-feedback">Password is incorrect</div>
+                        
 
                     </div>
 
                     <div class="form-footer">
-                        <button id="submit" type="submit" class="btn btn-primary w-100">Sign in</button>
+                        <button id="submit" type="submit" class="btn btn-primary w-100">Đăng nhập</button>
                     </div>
 
 
@@ -60,7 +60,7 @@
 
             </form>
             <div class="text-center text-muted mt-3">
-                Don't have account yet? <a href="register" tabindex="-1">Sign up</a>
+                Bạn chưa có tài khoản? <a href="register" tabindex="-1">Đăng ký</a>
             </div>
         </div>
     </div>
@@ -75,7 +75,7 @@
                 e.preventDefault();
                 var submitBut = $("#submit");
                 submitBut.addClass("disabled");
-                submitBut.html(`<span class="spinner-border spinner-border-sm me-2" role="status"></span>Sign in...`)
+                submitBut.html(`<span class="spinner-border spinner-border-sm me-2" role="status"></span>Đang xử lý...`)
                 $.ajax({
                     url: 'login',
                     type: "POST",
@@ -88,7 +88,7 @@
                         if (result.message.search("username") != -1) $("[name='username']").addClass("is-invalid");
                         if (result.message.search("password") != -1) $("[name='password']").addClass("is-invalid");
                         submitBut.removeClass("disabled");
-                        submitBut.html("Sign in");
+                        submitBut.html("Đăng nhập");
 
                     },
                     error: function (xhr, resp, text) {

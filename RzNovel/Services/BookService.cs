@@ -169,7 +169,7 @@ namespace RzNovel.Services
                 bi.visitCount = e.VisitCount;
                 bi.bookStatus = e.BookStatus;
                 bi.updateTime = (DateTime)e.UpdateTime;
-                bi.lastChapterId = 0;
+                if (e.LastChapterId is not null) bi.lastChapterId = (long)e.LastChapterId;
                 bi.lastChapterName = e.LastChapterName;
                 res.Add(bi);
             });
@@ -180,16 +180,22 @@ namespace RzNovel.Services
         public async Task<RestResp<BookInfoRespDto>> getBookById(long bookId)
         {
             BookInfo bookInfo = await _context.BookInfos.FirstOrDefaultAsync(e => e.Id == bookId);
+
             BookInfoRespDto bi = new BookInfoRespDto();
-            bi.id = bookInfo.Id;
+            if (bookInfo is not null) {
+                bi.id = bookInfo.Id;
             
-            bi.bookName = bookInfo.BookName;
-            bi.categoryName = bookInfo.CategoryName;
-            bi.wordCount = bookInfo.WordCount;
-            bi.visitCount = bookInfo.VisitCount;
-            bi.bookDesc = bookInfo.BookDesc;
-            bi.bookStatus = bookInfo.BookStatus;
-            bi.updateTime = (DateTime)bookInfo.UpdateTime;
+                bi.bookName = bookInfo.BookName;
+                bi.categoryName = bookInfo.CategoryName;
+                bi.wordCount = bookInfo.WordCount;
+                bi.visitCount = bookInfo.VisitCount;
+                bi.bookDesc = bookInfo.BookDesc;
+                bi.bookStatus = bookInfo.BookStatus;
+                if (bookInfo.LastChapterId is not null) bi.lastChapterId = (long)bookInfo.LastChapterId;
+
+                bi.authorName = bookInfo.AuthorName;
+                if (bookInfo.UpdateTime is not null)  bi.updateTime = (DateTime)bookInfo.UpdateTime;
+            }
 
             return RestResp<BookInfoRespDto>.ok(bi);
         }
@@ -238,6 +244,47 @@ namespace RzNovel.Services
             return RestResp<PageRespDto<BookChapterRespDto>>.ok(PageRespDto<BookChapterRespDto>.of(dto.pageNum, dto.pageSize, cQuery.Count(), res));
         }
 
+        public BookChapterRespDto getChapter(long chapterId)
+        {
+            BookChapter bookChapter = _context.BookChapters.FirstOrDefault(e => e.Id == chapterId);
+            
+            BookChapterRespDto res = new BookChapterRespDto();
+            if (bookChapter is not null) {
+                res.id = bookChapter.Id;
+                res.bookId = bookChapter.BookId;
+                res.chapterNum = bookChapter.ChapterNum;
+                res.chapterName = bookChapter.ChapterName;
+                res.chapterWordCount = bookChapter.WordCount;
+                res.chapterUpdateTime = (DateTime)bookChapter.UpdateTime;
+            }
+            return res;
+        }
+
+        public string getBookContent(long chapterId)
+        {
+            BookContent bookContent = _context.BookContents.FirstOrDefault(e => e.ChapterId == chapterId);
+            if (bookContent is not null)
+                return bookContent.Content;
+            else return "";
+        }
+
+        public async Task<RestResp<List<BookChapterRespDto>>> listChapters(long bookId)
+        {
+            var cQuery = _context.BookChapters.Where(e => e.BookId == bookId).OrderBy(e => e.ChapterNum);
+            var pageQuery = await cQuery.ToListAsync();
+            // bind List 
+            List<BookChapterRespDto> res = new List<BookChapterRespDto>();
+            pageQuery.ForEach(e =>
+            {
+                BookChapterRespDto bi = new BookChapterRespDto();
+                bi.id = e.Id;
+                bi.chapterName = e.ChapterName;
+                bi.chapterNum = e.ChapterNum;
+                res.Add(bi);
+            });
+            return RestResp<List<BookChapterRespDto>>.ok(res);
+        }
+
         public async Task<RestResp<BookContentAboutRespDto>> getBookContentAbout(long chapterId)
         {
             BookChapterRespDto bookChapterResp = getChapter(chapterId);
@@ -251,25 +298,44 @@ namespace RzNovel.Services
             return RestResp<BookContentAboutRespDto>.ok(res);
         }
 
-        public BookChapterRespDto getChapter(long chapterId)
+        public async Task<RestResp<BookChapterAboutRespDto>> getLastChapterAbout(long bookId)
         {
-            BookChapter bookChapter = _context.BookChapters.FirstOrDefault(e => e.Id == chapterId);
-            BookChapterRespDto res = new BookChapterRespDto();
-            res.id = bookChapter.Id;
-            res.bookId = bookChapter.BookId;
-            res.chapterNum = bookChapter.ChapterNum;
-            res.chapterName = bookChapter.ChapterName;
-            res.chapterWordCount = bookChapter.WordCount;
-            res.chapterUpdateTime = (DateTime)bookChapter.UpdateTime;
-            return res;
+            BookInfoRespDto bookInfoResp = (await getBookById(bookId)).data;
+            BookChapterRespDto bookChapterResp = getChapter(bookInfoResp.lastChapterId);
+            string content = getBookContent(bookInfoResp.lastChapterId);
+
+            // count total chapters
+            long chapterTotal = await _context.BookChapters.Where(e => e.BookId == bookId).CountAsync();
+
+            // return
+            BookChapterAboutRespDto res = new BookChapterAboutRespDto();
+            res.chapterInfo = bookChapterResp;
+            res.chapterTotal = chapterTotal;
+            res.contentSummary = content.Length > 30 ? content.Substring(0, 30) : content;
+            return RestResp<BookChapterAboutRespDto>.ok(res);
+
         }
 
-        public string getBookContent(long chapterId)
+        public async Task<RestResp<long>> getPreChapterId(long chapterId)
         {
-            BookContent bookContent = _context.BookContents.FirstOrDefault(e => e.ChapterId == chapterId);
-            return bookContent.Content;
+            BookChapterRespDto chapter = getChapter(chapterId);
+            long bookId = chapter.bookId;
+            int chapterNum = chapter.chapterNum;
+            
+            var preChapter = await _context.BookChapters.Where(e => e.BookId == bookId && e.ChapterNum < chapterNum).OrderByDescending(e => e.ChapterNum).FirstOrDefaultAsync();
+            
+            return RestResp<long>.ok((preChapter is null) ? chapterId : preChapter.Id);
         }
 
-        
+        public async Task<RestResp<long>> getNextChapterId(long chapterId)
+        {
+            BookChapterRespDto chapter = getChapter(chapterId);
+            long bookId = chapter.bookId;
+            int chapterNum = chapter.chapterNum;
+
+            var preChapter = await _context.BookChapters.Where(e => e.BookId == bookId && e.ChapterNum > chapterNum).OrderBy(e => e.ChapterNum).FirstOrDefaultAsync();
+
+            return RestResp<long>.ok((preChapter is null) ? chapterId : preChapter.Id);
+        }
     }
 }

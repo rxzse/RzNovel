@@ -52,7 +52,7 @@
                     <tr>
                         
                         <td><span class="text-muted">@bi.id</span></td>
-                        <td><strong>@bi.bookName</strong></td>
+                        <td><a href="/book/details/@bi.id" target="_blank"><strong>@bi.bookName</strong></a></td>
                         <td>
                             <span class="status status-green">
                                 @bi.categoryName
@@ -60,7 +60,7 @@
                         </td>
                         <td>@bi.visitCount</td>
                         <td>@bi.wordCount</td>
-                        <td>@bi.lastChapterName</td>
+                        <td><a href="/book/read/@bi.lastChapterId" target="_blank"><strong>@bi.lastChapterName</strong></a></td>
                         <td>@bi.updateTime</td>
                         <td>
                             @if (bi.bookStatus == 0)
@@ -85,17 +85,28 @@
                             }
                         </td>
                         <td class="text-end">
-                            <span class="dropdown">
-                                <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
-                                <div class="dropdown-menu dropdown-menu-end" style="">
-                                    <a class="dropdown-item" href="/author/manage/edit_book?bookId=@bi.id">
-                                        Chỉnh sửa truyện
-                                    </a>
-                                    <a class="dropdown-item" href="/author/manage/chapter?bookId=@bi.id">
-                                        Quản lý chapter
-                                    </a>
-                                </div>
-                            </span>
+                            <a href="/author/manage/edit_book?bookId=@bi.id">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                    <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>
+                                    <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"></path>
+                                    <path d="M16 5l3 3"></path>
+                                </svg>
+
+                            </a>
+                            <a href="/author/manage/chapter?bookId=@bi.id">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-list" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                    <line x1="9" y1="6" x2="20" y2="6"></line>
+                                    <line x1="9" y1="12" x2="20" y2="12"></line>
+                                    <line x1="9" y1="18" x2="20" y2="18"></line>
+                                    <line x1="5" y1="6" x2="5" y2="6.01"></line>
+                                    <line x1="5" y1="12" x2="5" y2="12.01"></line>
+                                    <line x1="5" y1="18" x2="5" y2="18.01"></line>
+                                </svg>
+
+                            </a>
+                            
                         </td>
                     </tr>
                     }
