@@ -16,11 +16,19 @@ namespace RzNovel.Services
         public Task<RestResp<string>> updateBook(BookAddReqDto dto, long userId);
 
         public Task<RestResp<string>> saveBookChapter(ChapterAddReqDto dto, long userId);
+
+        public Task<RestResp<string>> updateBookChapter(ChapterAddReqDto dto, long userId);
         public RestResp<List<BookCategoryRespDto>> listBookCategories();
         public Task<RestResp<PageRespDto<BookInfoRespDto>>> listAuthorBooks(PageReqDto dto, long userId);
 
         public Task<RestResp<PageRespDto<BookChapterRespDto>>> listBookChapters(PageReqDto dto, long bookId);
 
         public Task<RestResp<BookInfoRespDto>> getBookById(long bookId);
+
+        public Task<RestResp<BookContentAboutRespDto>> getBookContentAbout(long chapterId);
+
+        public BookChapterRespDto getChapter(long chapterId);
+
+        public string getBookContent(long chapterId); 
     }
 }

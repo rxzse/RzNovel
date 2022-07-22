@@ -20,5 +20,7 @@ namespace RzNovel.DTO.Req
         [Required(AllowEmptyStrings = false, ErrorMessage = "ChapterContent must be cant empty")]
         [Display(Name = "ChapterContent")]
         public string chapterContent { get; set; }
+
+        public long chapterId { get; set; } = 0;
     }
 }

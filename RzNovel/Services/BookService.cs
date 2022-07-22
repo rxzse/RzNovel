@@ -106,6 +106,43 @@ namespace RzNovel.Services
             return RestResp<string>.error("database error");
         }
 
+        public async Task<RestResp<string>> updateBookChapter(ChapterAddReqDto dto, long userId)
+        {
+            // check chapter <- book
+            BookChapter bookChapter = await _context.BookChapters.FirstOrDefaultAsync(e => e.Id == dto.chapterId && e.BookId == dto.bookId);
+            if (bookChapter is null) RestResp<string>.error("chapter not exists");
+
+            // check book <- userId
+            AuthorInfo authorInfo = await _context.AuthorInfos.FirstOrDefaultAsync(e => e.UserId == userId);
+            BookInfo bookInfo = await _context.BookInfos.FirstOrDefaultAsync(e => e.AuthorId == authorInfo.Id && e.Id == dto.bookId);
+            if (bookInfo is null) return RestResp<string>.error("book not exists");
+
+            // bind bookContent
+            BookContent bookContent = await _context.BookContents.FirstOrDefaultAsync(e => e.ChapterId == dto.chapterId);
+
+            // update bookChapter
+            long oldChapterWordCount = bookChapter.WordCount;
+            bookChapter.ChapterName = dto.chapterName;
+            bookChapter.WordCount = dto.chapterContent.Length;
+            bookChapter.UpdateTime = DateTime.Now;
+
+            // update bookContent
+            bookContent.Content = dto.chapterContent;
+            bookContent.UpdateTime = DateTime.Now;
+
+            // update bookInfo
+            bookInfo.WordCount = bookInfo.WordCount - oldChapterWordCount + bookChapter.WordCount;
+
+            // apply to database
+            _context.Entry(bookChapter).State = EntityState.Modified;
+            _context.Entry(bookContent).State = EntityState.Modified;
+            _context.Entry(bookInfo).State = EntityState.Modified;
+
+            int num = await _context.SaveChangesAsync();
+            if (num != 0) return RestResp<string>.ok("success"); ;
+            return RestResp<string>.error("database error");
+        }
+
         public async Task<RestResp<PageRespDto<BookInfoRespDto>>> listAuthorBooks(PageReqDto dto, long userId)
         {
             AuthorInfo authorInfo = _context.AuthorInfos.FirstOrDefault(e => e.UserId == userId);
@@ -200,5 +237,39 @@ namespace RzNovel.Services
 
             return RestResp<PageRespDto<BookChapterRespDto>>.ok(PageRespDto<BookChapterRespDto>.of(dto.pageNum, dto.pageSize, cQuery.Count(), res));
         }
+
+        public async Task<RestResp<BookContentAboutRespDto>> getBookContentAbout(long chapterId)
+        {
+            BookChapterRespDto bookChapterResp = getChapter(chapterId);
+            string content = getBookContent(chapterId);
+            BookInfoRespDto bookInfo = (await getBookById(bookChapterResp.bookId)).data;
+
+            BookContentAboutRespDto res = new BookContentAboutRespDto();
+            res.bookInfo = bookInfo;
+            res.chapterInfo = bookChapterResp;
+            res.content = content;
+            return RestResp<BookContentAboutRespDto>.ok(res);
+        }
+
+        public BookChapterRespDto getChapter(long chapterId)
+        {
+            BookChapter bookChapter = _context.BookChapters.FirstOrDefault(e => e.Id == chapterId);
+            BookChapterRespDto res = new BookChapterRespDto();
+            res.id = bookChapter.Id;
+            res.bookId = bookChapter.BookId;
+            res.chapterNum = bookChapter.ChapterNum;
+            res.chapterName = bookChapter.ChapterName;
+            res.chapterWordCount = bookChapter.WordCount;
+            res.chapterUpdateTime = (DateTime)bookChapter.UpdateTime;
+            return res;
+        }
+
+        public string getBookContent(long chapterId)
+        {
+            BookContent bookContent = _context.BookContents.FirstOrDefault(e => e.ChapterId == chapterId);
+            return bookContent.Content;
+        }
+
+        
     }
 }

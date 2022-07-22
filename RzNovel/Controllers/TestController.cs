@@ -75,5 +75,13 @@ namespace RzNovel.Controllers
             
             return await _bookService.listAuthorBooks(dto, 4);
         }
+
+        [Route("~/api/test/book_content")]
+        [HttpGet]
+        public async Task<ActionResult<RestResp<BookContentAboutRespDto>>> GetBookContent(long id)
+        {
+
+            return await _bookService.getBookContentAbout(id);
+        }
     }
 }

@@ -117,6 +117,9 @@ namespace RzNovel.Controllers
 
             ViewData["BigTitle"] = "Truyện: " + bRes.bookName;
             ViewData["SmallTitle"] = "Quản lý Chapter";
+            ViewBag.ButtonCustom = true;
+            ViewBag.ButtonTitle = "Thêm Chapter";
+            ViewBag.ButtonAction = "/author/manage/add_chapter?bookId=" + bookId;
 
             return View();
         }
@@ -125,10 +128,15 @@ namespace RzNovel.Controllers
         [HttpGet]
         public async Task<IActionResult> AddBookChapter(long bookId)
         {
+            ViewBag.ButtonCustom = true;
+            ViewBag.ButtonTitle = "Thêm Chapter";
+            ViewBag.ButtonAction = "/author/manage/add_chapter?bookId=" + bookId;
+            ///////////////////////
             BookInfoRespDto bRes = (await _bookService.getBookById(bookId)).data;
             ViewData["BigTitle"] = "Truyện: " + bRes.bookName;
             ViewData["SmallTitle"] = "Tạo Chapter mới";
             ViewBag.BookInfo = bRes;
+
             return View();
         }
 
@@ -138,6 +146,29 @@ namespace RzNovel.Controllers
         {
             long userId = long.Parse(HttpContext.User.Claims.First(e => e.Type.Equals("Id")).Value);
             return await _bookService.saveBookChapter(dto, userId);
+        }
+
+        [Route("manage/edit_chapter")]
+        [HttpGet]
+        public async Task<IActionResult> EditBookChapter(long chapterId)
+        {
+            BookContentAboutRespDto bRes = (await _bookService.getBookContentAbout(chapterId)).data;
+            ViewData["BigTitle"] = "Truyện: " + bRes.bookInfo.bookName;
+            ViewData["SmallTitle"] = $"Chỉnh sửa Chapter: [{bRes.chapterInfo.chapterNum}] {bRes.chapterInfo.chapterName}";
+            ViewBag.ChapterInfo = bRes;
+            //  
+            ViewBag.ButtonCustom = true;
+            ViewBag.ButtonTitle = "Thêm Chapter";
+            ViewBag.ButtonAction = "/author/manage/add_chapter?bookId=" + bRes.bookInfo.id;
+            return View();
+        }
+
+        [Route("manage/edit_chapter")]
+        [HttpPost]
+        public async Task<ActionResult<RestResp<string>>> PostEditBookChapter(ChapterAddReqDto dto)
+        {
+            long userId = long.Parse(HttpContext.User.Claims.First(e => e.Type.Equals("Id")).Value);
+            return await _bookService.updateBookChapter(dto, userId);
         }
     }
 }

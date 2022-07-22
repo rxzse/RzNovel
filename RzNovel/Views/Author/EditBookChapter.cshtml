@@ -1,0 +1,66 @@
+﻿@{
+    Layout = "_VerticalLayout";
+}
+@using RzNovel.DTO.Resp;
+@using RzNovel.Services;
+@{ 
+    BookContentAboutRespDto biRes = (BookContentAboutRespDto)ViewBag.ChapterInfo;
+}
+
+<div class="col-12">
+    <form id="edit_chapter_form" method="post" class="card">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="mb-3">
+                    <label class="form-label required">Tên Chapter</label>
+                    <input type="text" class="form-control" name="chapterName" placeholder="Nhập tên chương" value="@biRes.chapterInfo.chapterName">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Nội dung</label>
+                    <textarea rows="10" class="form-control" name="chapterContent" placeholder="Nội dung chương">@biRes.content</textarea>
+                </div>
+
+
+                <input type="text" class="form-control" name="bookId" value="@biRes.bookInfo.id" hidden>
+
+                <input type="text" class="form-control" name="chapterId" value="@biRes.chapterInfo.id" hidden>
+
+                <div class="form-footer">
+                    <button id="submit" type="submit" class="btn btn-primary w-100">Lưu Chapter</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#edit_chapter_form").on('submit', function (e) {
+            e.preventDefault();
+            
+            var submitBut = $("#submit");
+            submitBut.addClass("disabled");
+            submitBut.html(`<span class="spinner-border spinner-border-sm me-2" role="status"></span>Đang lưu...`)
+            $.ajax({
+                url: 'edit_chapter',
+                type: "POST",
+                dataType: 'json',
+                data: $("#edit_chapter_form").serialize(),
+
+
+                success: function (result) {
+                    if (result.code == "200") return setTimeout(() => swal("Sửa Chapter", "Sửa Chapter thành công!", "success").then(() => location.href = "./"), 1000);
+                    if (result.message.search("success") == -1) $("[name='chapterContent']").addClass("is-invalid");
+
+                    submitBut.removeClass("disabled");
+                    submitBut.html("Lưu Chapter");
+
+                },
+                error: function (xhr, resp, text) {
+                    console.log(xhr, resp, text);
+                }
+            })
+        })
+    })
+</script>
+

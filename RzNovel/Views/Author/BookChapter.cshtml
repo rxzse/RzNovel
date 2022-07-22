@@ -36,18 +36,8 @@
                         <td>@bi.chapterWordCount</td>
                         <td>@bi.chapterUpdateTime</td>
                         
-                        <td class="text-end">
-                            <span class="dropdown">
-                                <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
-                                <div class="dropdown-menu dropdown-menu-end" style="">
-                                    <a class="dropdown-item" href="/author/manage/edit_book?bookId=@bi.id">
-                                        Chỉnh sửa truyện
-                                    </a>
-                                    <a class="dropdown-item" href="#">
-                                        Quản lý chapter
-                                    </a>
-                                </div>
-                            </span>
+                        <td>
+                            <a href="/author/manage/edit_chapter?chapterId=@bi.id">Chỉnh sửa</a>
                         </td>
                     </tr>
                     }
