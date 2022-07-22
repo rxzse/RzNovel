@@ -54,6 +54,8 @@ namespace RzNovel.Services
             bookInfo.PicUrl = "#";
             bookInfo.CreateTime = bookInfo.UpdateTime = DateTime.Now;
 
+            bookInfo.BookStatus = 1;
+
             _context.BookInfos.Add(bookInfo);
             int num = await _context.SaveChangesAsync();
             if (num != 0) return RestResp<string>.ok("success"); ;
@@ -97,7 +99,11 @@ namespace RzNovel.Services
             bookInfo.LastChapterUpdateTime = DateTime.Now;
             bookInfo.WordCount = bookInfo.WordCount + newBookChapter.WordCount;
             newBookChapter.UpdateTime = DateTime.Now;
-            
+
+            // bookInfo update Time
+            bookInfo.UpdateTime = newBookChapter.UpdateTime;
+
+
             _context.Entry(bookInfo).State = EntityState.Modified;
             num += await _context.SaveChangesAsync();
 
@@ -336,6 +342,106 @@ namespace RzNovel.Services
             var preChapter = await _context.BookChapters.Where(e => e.BookId == bookId && e.ChapterNum > chapterNum).OrderBy(e => e.ChapterNum).FirstOrDefaultAsync();
 
             return RestResp<long>.ok((preChapter is null) ? chapterId : preChapter.Id);
+        }
+
+        public async Task<RestResp<string>> addVisitCount(long bookId)
+        {
+            BookInfo bookInfo = await _context.BookInfos.FirstOrDefaultAsync(e => e.Id == bookId);
+            if (bookInfo is not null)
+            {
+                bookInfo.VisitCount = bookInfo.VisitCount + 1;
+                _context.Entry(bookInfo).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+            }
+            return RestResp<string>.ok("success");
+        }
+
+        public async Task<RestResp<List<BookRankRespDto>>> listVisitRankBooks()
+        {
+            var bQuery = _context.BookInfos.OrderByDescending(e => e.VisitCount);
+            return RestResp<List<BookRankRespDto>> .ok(await listRankBooks(bQuery));
+        }
+
+        public async Task<RestResp<List<BookRankRespDto>>> listNewestRankBooks()
+        {
+            var bQuery = _context.BookInfos.Where(e=>e.WordCount > 0).OrderByDescending(e => e.CreateTime);
+            return RestResp<List<BookRankRespDto>>.ok(await listRankBooks(bQuery));
+        }
+
+        public async Task<RestResp<List<BookRankRespDto>>> listUpdateRankBooks()
+        {
+            var bQuery = _context.BookInfos.Where(e => e.WordCount > 0).OrderByDescending(e => e.UpdateTime);
+            return RestResp<List<BookRankRespDto>>.ok(await listRankBooks(bQuery));
+        }
+
+        public async Task<List<BookRankRespDto>> listRankBooks(IOrderedQueryable<BookInfo> bQuery)
+        {
+            var bList = await bQuery.Take(30).ToListAsync();
+            List<BookRankRespDto> res = new List<BookRankRespDto>();
+            bList.ForEach(e =>
+            {
+                BookRankRespDto br = new BookRankRespDto();
+                br.id = e.Id;
+                br.categoryId = (long)e.CategoryId;
+                br.categoryName = e.CategoryName;
+                br.bookName = e.BookName;
+                br.authorName = e.AuthorName;
+                br.bookDesc = e.BookDesc;
+                br.lastChapterName = e.LastChapterName;
+                if (e.LastChapterUpdateTime is not null) br.lastChapterUpdateTime = (DateTime)e.LastChapterUpdateTime;
+                br.wordCount = (int)e.WordCount;
+                res.Add(br);
+            });
+            return res;
+        }
+
+        public async Task<RestResp<PageRespDto<BookInfoRespDto>>> searchBooks(BookSearchReqDto dto)
+        {
+            // Query
+            Func<BookInfo, bool> pSearch = (el) =>
+            {
+                bool result = true;
+                if (!string.IsNullOrEmpty(dto.keyword)) result = result && (el.BookName.ToLower().Contains(dto.keyword.ToLower()) || el.AuthorName.ToLower().Contains(dto.keyword.ToLower()));
+                if (!string.IsNullOrEmpty(dto.categoryName)) result = result && el.CategoryName.ToLower().Contains(dto.categoryName.ToLower());
+                if (dto.category != 0) result = result && (dto.category == el.CategoryId);
+                if (dto.status != 0) result = result && (dto.status == el.BookStatus);
+                return result;
+            };
+            var bQuery = _context.BookInfos.Where(pSearch);
+
+            try { if (!string.IsNullOrEmpty(dto.sort)) bQuery.OrderBy(e => e.GetType().GetProperty(dto.sort)); } catch { }
+            
+
+            // paginating
+            int startIndex = 0;
+            if (dto.pageNum != 1)
+            {
+                startIndex = dto.pageNum - 1;
+                startIndex = startIndex * dto.pageSize;
+            }
+            var pageQuery = bQuery.Skip(startIndex).Take(dto.pageSize).ToList();
+
+            // bind List 
+            List<BookInfoRespDto> res = new List<BookInfoRespDto>();
+            pageQuery.ForEach(e =>
+            {
+                BookInfoRespDto bi = new BookInfoRespDto();
+                bi.id = e.Id;
+                bi.bookName = e.BookName;
+                bi.categoryId = (long)e.CategoryId;
+                bi.categoryName = e.CategoryName;
+                bi.wordCount = e.WordCount;
+                bi.authorName = e.AuthorName;
+                bi.bookDesc = e.BookDesc;
+                bi.visitCount = e.VisitCount;
+                bi.bookStatus = e.BookStatus;
+                bi.updateTime = (DateTime)e.UpdateTime;
+                if (e.LastChapterId is not null) bi.lastChapterId = (long)e.LastChapterId;
+                bi.lastChapterName = e.LastChapterName;
+                res.Add(bi);
+            });
+
+            return RestResp<PageRespDto<BookInfoRespDto>>.ok(PageRespDto<BookInfoRespDto>.of(dto.pageNum, dto.pageSize, bQuery.Count(), res));
         }
     }
 }

@@ -49,9 +49,18 @@
                                             <!-- Download SVG icon from http://tabler-icons.io/i/brand-github -->
                                             Đăng truyện
                                         </a>
+                                        @if (Context.User.IsInRole("Admin"))
+                                        { 
+                                            <a href="/admin/manage" class="btn" rel="noreferrer">
+                                                <!-- Download SVG icon from http://tabler-icons.io/i/brand-github -->
+                                                Quản lý hệ thống
+                                            </a>
+                                        }
 
                                     </div>
                                 </div>
+
+                                
 
                                 <div class="nav-item dropdown">
                                     <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown"
@@ -64,10 +73,6 @@
                                         </div>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                        <a href="#" class="dropdown-item">Profile & account</a>
-                                        <a href="#" class="dropdown-item">Feedback</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a href="#" class="dropdown-item">Settings</a>
                                         <a href="/auth/logout" class="dropdown-item">Đăng xuất</a>
                                     </div>
                                 </div>
@@ -117,7 +122,7 @@
                                     </span>
                                 </a>
                             </li>
-                            <li class="nav-item active dropdown">
+                            <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
                                    data-bs-auto-close="outside" role="button" aria-expanded="false">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -145,7 +150,7 @@
                                                 foreach (var _c in lCates)
                                                 {
 
-                                                    <a class="dropdown-item" href="#">
+                                                    <a class="dropdown-item" href="/search?category=@_c.id">
                                                         @_c.name
                                                     </a>
 
@@ -184,24 +189,17 @@
                                 <div class="dropdown-menu">
                                     <div class="dropdown-menu-columns">
                                         <div class="dropdown-menu-column">
-                                            <a class="dropdown-item active" href="#">
-                                                Empty page
+                                            <a class="dropdown-item" href="/book/ranking?type=2">
+                                                Mới cập nhật
                                             </a>
-                                            <a class="dropdown-item" href="#">
-                                                Accordion
+                                            <a class="dropdown-item" href="/book/ranking?type=1">
+                                                Mới Nhất
                                             </a>
-
+                                            <a class="dropdown-item" href="/book/ranking">
+                                                Xem nhiều nhất
+                                            </a>
                                         </div>
-                                        <div class="dropdown-menu-column">
-                                            <a class="dropdown-item" href="#">
-                                                Charts
-                                            </a>
-                                            <a class="dropdown-item" href="#">
-                                                <!-- Download SVG icon from http://tabler-icons.io/i/pie-chart -->
-                                                Pagination
-                                            </a>
 
-                                        </div>
                                     </div>
                                 </div>
                             </li>
@@ -209,7 +207,7 @@
                         </ul>
 
                         <div class="my-2 my-md-0 flex-grow-1 flex-md-grow-0 order-first order-md-last">
-                            <form action="." method="get">
+                            <form action="/search" method="get">
                                 <div class="input-icon">
                                     <span class="input-icon-addon">
                                         <!-- Download SVG icon from http://tabler-icons.io/i/search -->
@@ -221,8 +219,8 @@
                                             <line x1="21" y1="21" x2="15" y2="15" />
                                         </svg>
                                     </span>
-                                    <input type="text" value="" class="form-control" placeholder="Tìm kiếm"
-                                           aria-label="Search in website">
+                                    <input type="text" value="" class="form-control" placeholder="Tìm kiếm truyện..."
+                                           aria-label="Search in website" name="keyword">
                                 </div>
                             </form>
                         </div>
@@ -277,12 +275,15 @@
     </div>
     <!-- Libs JS -->
     <!-- Tabler Core -->
+    <script src="~/me/app.js"></script>
     <script src="~/js/tabler.min.js" defer></script>
     <script src="~/js/demo.min.js" defer></script>
     <script src="~/libs/jquery/jquery-3.6.0.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/timeago.js/4.0.2/timeago.full.min.js"></script>
     <script>
-        $(document).ready(() => $("#timeAgo").text(timeago.format($("#timeAgo").text(), "vi")))
+        $(document).ready(() => {
+            $("[name='timeAgo']").each((e, k) => console.log(k.innerText = timeago.format(k.innerText, "vi")))
+        })
     </script>
 </body>
 </html>

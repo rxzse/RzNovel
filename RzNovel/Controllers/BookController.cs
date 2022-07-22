@@ -35,7 +35,8 @@ namespace RzNovel.Controllers
         [HttpGet]
         public async Task<IActionResult> BookDetails(long bookId)
         {
-
+            // count
+            await _bookService.addVisitCount(bookId);
             BookInfoRespDto bookInfoResp = (await _bookService.getBookById(bookId)).data;
             List<BookChapterRespDto> listChapters = (await _bookService.listChapters(bookId)).data;
             BookChapterAboutRespDto lastChapterAbout = (await _bookService.getLastChapterAbout(bookId)).data;
@@ -55,6 +56,25 @@ namespace RzNovel.Controllers
             ViewBag.BookContent = bookContent;
             ViewBag.PreId = (await _bookService.getPreChapterId(chapterId)).data;
             ViewBag.NextId = (await _bookService.getNextChapterId(chapterId)).data;
+            return View();
+        }
+        [Route("ranking")]
+        [HttpGet]
+        public async Task<IActionResult> BookRank(byte type)
+        {
+            ViewData["Title"] = "Truyện xem nhiều nhất";
+            ViewBag.BookRanks = (await _bookService.listVisitRankBooks()).data;
+            if (type == 1)
+            {
+                ViewData["Title"] = "Truyện mới nhất";
+                ViewBag.BookRanks = (await _bookService.listNewestRankBooks()).data;
+            }
+            if (type == 2)
+            {
+                ViewData["Title"] = "Truyện mới cập nhật";
+                ViewBag.BookRanks = (await _bookService.listUpdateRankBooks()).data;
+            }
+            
             return View();
         }
     }

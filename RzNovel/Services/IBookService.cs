@@ -25,6 +25,19 @@ namespace RzNovel.Services
         public Task<RestResp<long>> getPreChapterId(long chapterId);
         public Task<RestResp<long>> getNextChapterId(long chapterId);
         public BookChapterRespDto getChapter(long chapterId);
-        public string getBookContent(long chapterId); 
+        public string getBookContent(long chapterId);
+
+        public Task<RestResp<string>> addVisitCount(long bookId);
+
+        public Task<List<BookRankRespDto>> listRankBooks(IOrderedQueryable<BookInfo> bQuery);
+
+        public Task<RestResp<List<BookRankRespDto>>> listVisitRankBooks();
+
+        public Task<RestResp<List<BookRankRespDto>>> listNewestRankBooks();
+
+        public Task<RestResp<List<BookRankRespDto>>> listUpdateRankBooks();
+
+        public Task<RestResp<PageRespDto<BookInfoRespDto>>> searchBooks(BookSearchReqDto dto);
+
     }
 }

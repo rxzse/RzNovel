@@ -76,6 +76,14 @@ namespace RzNovel.Controllers
             return await _bookService.listAuthorBooks(dto, 4);
         }
 
+        [Route("~/api/search")]
+        [HttpGet]
+        public async Task<ActionResult<RestResp<PageRespDto<BookInfoRespDto>>>> SearchBook(BookSearchReqDto dto)
+        {
+
+            return await _bookService.searchBooks(dto);
+        }
+
         [Route("~/api/test/book_content")]
         [HttpGet]
         public async Task<ActionResult<RestResp<BookContentAboutRespDto>>> GetBookContent(long id)
@@ -110,10 +118,12 @@ namespace RzNovel.Controllers
 
         [Route("~/api/test/next_chapter")]
         [HttpGet]
-        public async Task<ActionResult<RestResp<long>>> GetNextChapter(long id)
+        public async Task<RestResp<List<BookRankRespDto>>> getBookRank(byte type)
         {
+            if (type==1) return await _bookService.listVisitRankBooks();
+            if (type == 2) return await _bookService.listNewestRankBooks();
+            return await _bookService.listUpdateRankBooks();
 
-            return await _bookService.getNextChapterId(id);
         }
     }
 }

@@ -88,7 +88,9 @@ namespace RzNovel.Controllers
         [HttpPost]
         public async Task<ActionResult<RestResp<UserRegisterRespDto>>> PostRegister(UserRegisterReqDto dto)
         {
-            RestResp<UserRegisterRespDto> resp = await _userService.Register(dto);
+            if (!"on".Equals(dto.agree)) return RestResp<UserRegisterRespDto>.error("not_agree");
+            if (!dto.password.Equals(dto.re_password)) return RestResp<UserRegisterRespDto>.error("wrong_pass");
+            RestResp <UserRegisterRespDto> resp = await _userService.Register(dto);
             return resp;
         }
     }

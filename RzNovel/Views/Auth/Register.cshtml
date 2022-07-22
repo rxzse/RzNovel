@@ -59,7 +59,7 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-check">
-                                <input type="checkbox" class="form-check-input" />
+                                <input type="checkbox" class="form-check-input" name="agree"/>
                                 <span class="form-check-label">Agree the <a href="./terms-of-service.html" tabindex="-1">terms and policy</a>.</span>
                             </label>
                         </div>
@@ -99,7 +99,8 @@
                     success: function (result) {
                         if (result.code == "200") return setTimeout(() => { location.href = "login"}, 1000);
                         if (result.message.search("username") != -1) $("[name='username']").addClass("is-invalid");
-                        if (result.message.search("password") != -1) $("[name='password']").addClass("is-invalid");
+                        if (result.message.search("pass") != -1) $("[name='password']").addClass("is-invalid");
+                        if (result.message.search("agree") != -1) $("[name='agree']").addClass("is-invalid");
                         submitBut.removeClass("disabled");
                         submitBut.html("Đăng ký");
 

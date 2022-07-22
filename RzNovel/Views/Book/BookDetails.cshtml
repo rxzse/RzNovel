@@ -27,41 +27,8 @@
                         <div class="markdown text-muted">
                             Tác giả: @bookInfoResp.authorName
                         </div>
-                        
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-12 col-lg-8">
-        
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Danh sách chương</h3>
-            </div>
-            <div class="list-group list-group-flush overflow-auto" style="max-height: 16rem">
-                @foreach (var chap in listChapters)
-                {
-                    <a href="/book/read/@chap.id" class="list-group-item list-group-item-action">
-                        <div class="row">
-                            <div class="col col-auto"><span class="badge badge-pill bg-blue"><strong>@(chap.chapterNum + 1)</strong></span></div>
-                            <div class="col"><strong>@chap.chapterName</strong></div>
-                        </div>
-                    </a>
-                }
-            </div>
-            <div class="card-footer">
-                
-                <div class="row">
-                    <div class="col col-auto"><span class="badge badge-outline text-purple">Mới nhất</span></div>
-                    <div class="col col-auto">
-                        <a href="/book/read/@lastChapterAbout.chapterInfo.id">
-                            <strong>Chương @(lastChapterAbout.chapterInfo.chapterNum+1) - @lastChapterAbout.chapterInfo.chapterName</strong>
 
-                        </a>
                     </div>
-
-                    <div class="col"><strong class="float-end" id="timeAgo">@lastChapterAbout.chapterInfo.chapterUpdateTime</strong></div>
                 </div>
             </div>
         </div>
@@ -199,7 +166,7 @@
                                 </div>
                             </div>
 
-                           
+
                         </div>
 
                     </div>
@@ -211,10 +178,7 @@
                 </div>
             </div>
             <div class="card-footer">
-
-                
-
-                <strong class="float-end">
+                <strong>
                     @if (bookInfoResp.bookStatus == 0)
                     {
 
@@ -239,6 +203,40 @@
 
             </div>
         </div>
-        
+
     </div>
+    <div class="col-md-12 col-lg-8">
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Danh sách chương</h3>
+            </div>
+            <div class="list-group list-group-flush overflow-auto" style="max-height: 16rem">
+                @foreach (var chap in listChapters)
+                {
+                    <a href="/book/read/@chap.id" class="list-group-item list-group-item-action">
+                        <div class="row">
+                            <div class="col col-auto"><span class="badge badge-pill bg-blue"><strong>@(chap.chapterNum + 1)</strong></span></div>
+                            <div class="col"><strong>@chap.chapterName</strong></div>
+                        </div>
+                    </a>
+                }
+            </div>
+            <div class="card-footer">
+
+                <div class="row">
+                    <div class="col col-auto"><span class="badge badge-outline text-purple">Mới nhất</span></div>
+                    <div class="col col-auto">
+                        <a href="/book/read/@lastChapterAbout.chapterInfo.id">
+                            <strong>Chương @(lastChapterAbout.chapterInfo.chapterNum+1) - @lastChapterAbout.chapterInfo.chapterName</strong>
+
+                        </a>
+                    </div>
+
+                    <div class="col"><strong class="float-end" name="timeAgo">@lastChapterAbout.chapterInfo.chapterUpdateTime</strong></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>

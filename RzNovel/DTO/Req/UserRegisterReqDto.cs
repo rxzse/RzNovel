@@ -16,5 +16,13 @@ namespace RzNovel.DTO.Req
         [Required(AllowEmptyStrings = false, ErrorMessage = "Password must be cant empty"), MaxLength(20)]
         [Display(Name = "Password")]
         public string password { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Password must be cant empty"), MaxLength(20)]
+        [Display(Name = "RePassword")]
+        public string re_password { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Password must be cant empty"), MaxLength(20)]
+        [Display(Name = "Agree")]
+        public string agree { get; set; }
     }
 }

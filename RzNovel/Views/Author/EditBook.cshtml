@@ -24,7 +24,7 @@
                 <div class="mb-3">
                     <div class="form-label required">Trạng thái</div>
                     <select class="form-select" name="bookStatus">
-                        <option value="0">Dự thảo</option>
+                        
                         <option value="1">Đang ra</option>
                         <option value="2">Hoàn thành</option>
                         <option value="3">Tạm dừng</option>
@@ -45,7 +45,7 @@
     $(document).ready(function () {
         $("#edit_book_form").on('submit', function (e) {
             e.preventDefault();
-            $("[name='categoryName']").val($("[name='categoryId'] option:selected").text());
+            
             var submitBut = $("#submit");
             submitBut.addClass("disabled");
             submitBut.html(`<span class="spinner-border spinner-border-sm me-2" role="status"></span>Đang lưu...`)
