@@ -26,10 +26,13 @@ namespace RzNovel.Services
         {
             List<BookCategoryRespDto> res = new List<BookCategoryRespDto>();
              _context.BookCategories.ToList().ForEach(e => {
-                BookCategoryRespDto ii = new BookCategoryRespDto();
-                    ii.id = e.Id;
-                    ii.name = e.Name;
-                    res.Add(ii);
+                 BookCategoryRespDto ii = new BookCategoryRespDto();
+                 ii.id = e.Id;
+                 ii.name = e.Name;
+                 ii.sort = e.Sort;
+                 if (e.CreateTime is not null) ii.createTime = (DateTime)e.CreateTime;
+                 if (e.UpdateTime is not null) ii.updateTime = (DateTime)e.UpdateTime;
+                 res.Add(ii);
                 });
             return RestResp<List<BookCategoryRespDto>>.ok(res);
         }

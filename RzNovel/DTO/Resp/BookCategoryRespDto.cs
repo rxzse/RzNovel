@@ -14,5 +14,14 @@ namespace RzNovel.DTO.Resp
 
         [Display(Name = "Name")]
         public string name { get; set; }
+
+        [Display(Name = "Sort")]
+        public byte sort { get; set; }
+
+        [Display(Name = "createTime")]
+        public DateTime createTime { get; set; }
+
+        [Display(Name = "updateTime")]
+        public DateTime updateTime { get; set; }
     }
 }

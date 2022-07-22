@@ -18,13 +18,15 @@ namespace RzNovel.Controllers
         private readonly IBookService _bookService;
         private readonly IUserService _userService;
         private readonly IAuthorService _authorService;
+        private readonly IAdminService _adminService;
 
-        public TestController(IHomeService homeService, IBookService bookService, IUserService userService, IAuthorService authorService)
+        public TestController(IHomeService homeService, IBookService bookService, IUserService userService, IAuthorService authorService, IAdminService adminService)
         {
             _homeService = homeService;
             _bookService = bookService;
             _userService = userService;
             _authorService = authorService;
+            _adminService = adminService;
         }
 
         // GET: api/APIHomeBooks
@@ -124,6 +126,14 @@ namespace RzNovel.Controllers
             if (type == 2) return await _bookService.listNewestRankBooks();
             return await _bookService.listUpdateRankBooks();
 
+        }
+
+        [Route("~/api/list_authors")]
+        [HttpGet]
+        public async Task<ActionResult<RestResp<PageRespDto<AuthorInfoRespDto>>>> ListAuthors(PageReqDto dto)
+        {
+
+            return await _adminService.listAuthors(dto);
         }
     }
 }

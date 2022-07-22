@@ -36,6 +36,7 @@ namespace RzNovel
             services.AddScoped<RzNovelContext, RzNovelContext>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthorService, AuthorService>();
+            services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<IHomeService, HomeService>();
             services.AddScoped<IBookService, BookService>();
         }

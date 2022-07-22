@@ -1,0 +1,58 @@
+﻿@{
+    Layout = "_AdminLayout";
+}
+
+
+<div class="col-12">
+    <form id="add_category_form" method="post" class="card">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="mb-3">
+                    <label class="form-label required">Tên thể loại</label>
+                    <input type="text" class="form-control" name="name" placeholder="Name">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label required">Độ ưu tiên</label>
+                    <input type="number" class="form-control" name="sort" placeholder="Order" value="100">
+                </div>
+
+                <div class="form-footer">
+                    <button id="submit" type="submit" class="btn btn-primary w-100">Lưu Category</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#add_category_form").on('submit', function (e) {
+            e.preventDefault();
+            
+            var submitBut = $("#submit");
+            submitBut.addClass("disabled");
+            submitBut.html(`<span class="spinner-border spinner-border-sm me-2" role="status"></span>Đang lưu...`)
+            $.ajax({
+                url: 'add_category',
+                type: "POST",
+                dataType: 'json',
+                data: $("#add_category_form").serialize(),
+
+
+                success: function (result) {
+                    if (result.code == "200") return setTimeout(() => swal("Tạo mới thể loại", "Thêm Category thành công!", "success").then(() => location.href = "/admin/categories"), 1000);
+                    if (result.message.search("category") != -1) $("[name='name']").addClass("is-invalid");
+
+                    submitBut.removeClass("disabled");
+                    submitBut.html("Lưu Category");
+
+                },
+                error: function (xhr, resp, text) {
+                    console.log(xhr, resp, text);
+                }
+            })
+        })
+    })
+</script>
+
