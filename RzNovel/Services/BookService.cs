@@ -55,6 +55,7 @@ namespace RzNovel.Services
             bookInfo.BookName = dto.bookName;
             bookInfo.BookDesc = dto.bookDesc;
             bookInfo.PicUrl = "#";
+            bookInfo.VisitCount = 0L;
             bookInfo.CreateTime = bookInfo.UpdateTime = DateTime.Now;
 
             bookInfo.BookStatus = 1;

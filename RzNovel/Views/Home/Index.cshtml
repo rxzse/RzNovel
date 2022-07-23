@@ -34,9 +34,8 @@
                                 @foreach (var br in listUpdateRankBooks) {
                                 <tr>
                                     <td>
-                                        <span class="status status-green">
-                                            @br.categoryName
-                                        </span>
+
+                                        <span class="badge bg-blue">@br.categoryName</span>
                                     </td>
                                     <td class="text-muted">
                                         <a href="/book/details/@br.id"><strong>@br.bookName</strong></a>
